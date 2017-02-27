@@ -4,9 +4,9 @@ public class Employee {
 	int empID;
 	String empName;
 	int prefHours;
-	TimeSlot[] empAvailability;
+	Schedule empAvailability;
 	
-	public Employee(int id, String name, int hours, TimeSlot[] avail){
+	public Employee(int id, String name, int hours, Schedule avail){
 		this.empID = id;
 		this.empName = name;
 		this.prefHours=hours;

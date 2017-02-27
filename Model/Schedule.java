@@ -1,24 +1,28 @@
+import java.util.ArrayList;
 
 public class Schedule {
 	
-	TimeSlot[] Sunday;
-	TimeSlot[] Monday;
-	TimeSlot[] Tuesday;
-	TimeSlot[] Wednesday;
-	TimeSlot[] Thursday;
-	TimeSlot[] Friday;
-	TimeSlot[] Saturday;
+	ArrayList<TimeSlot>[] timeBlocks;
 	
-	public Schedule(TimeSlot[] sun, TimeSlot[] mon, TimeSlot[] tues, 
-			TimeSlot[] wed, TimeSlot[] thurs, TimeSlot[] fri, TimeSlot[] sat){
+	
+	public Schedule(){
 		
-		this.Sunday = sun;
-		this.Monday = mon;
-		this.Tuesday = tues;
-		this.Wednesday = wed;
-		this.Thursday = thurs;
-		this.Friday = fri;
-		this.Saturday = sat;
+		timeBlocks = new ArrayList[7];
+
+	}
+	
+	public void AddTimeSlot(TimeSlot slot){
+		timeBlocks[slot.day].add(slot);
+		
+	}
+	
+	public Schedule MakeNewSchedule(){
+		Schedule newSchedule = new Schedule();
+		
+		
+		return newSchedule;
+		
+		
 	}
 	
 

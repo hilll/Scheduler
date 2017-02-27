@@ -1,10 +1,14 @@
 
 public class TimeSlot {
 	
-	Day day;
+	public int day;
+	public int start;
+	public int end;
 	
-	public TimeSlot(Day d, int start, int end){
-		
+	public TimeSlot(int d, int start, int end){
+		this.day = d;
+		this.start=start;
+		this.end = end;
 	}
 
 }

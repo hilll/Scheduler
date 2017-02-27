@@ -1,15 +1,13 @@
 
 public enum Day {
 	
-	SUNDAY(0,24), MONDAY(0,24), TUESDAY(0,24), WEDNESDAY(0,24), 
-		THURSDAY(0,24), FRIDAY(0,24), SATURDAY(0,24);
+	SUNDAY(0), MONDAY(1), TUESDAY(2), WEDNESDAY(3), 
+		THURSDAY(4), FRIDAY(5), SATURDAY(6);
 	
-	public int beginHour;
-	public int endHour;
+	public int day;
 	
-	Day(int begin, int end){
-		this.beginHour = begin;
-		this.endHour = end;
+	Day(int day){
+		this.day = day;
 	}
 
 }

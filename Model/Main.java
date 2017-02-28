@@ -3,10 +3,11 @@ public class Main {
 	
 	public static void main(String args[]){
 		
-		/* Company Scedule */
+		/* DUmmy Company Scedule, 2 10 hour shifts a day, every day of the week */
 		Schedule compSchedule = new Schedule();
 		for(int i = 0; i < 7; i++){
-			compSchedule.AddTimeSlot(new TimeSlot(i, 0, 24));
+			compSchedule.AddTimeSlot(new TimeSlot(i, 0, 10));
+			compSchedule.AddTimeSlot(new TimeSlot(i, 10, 20));
 		}
 		
 		
@@ -16,7 +17,7 @@ public class Main {
 			// Assign open availability all day
 			Schedule empSchedule = new Schedule();
 			for(int j = 0; j < 7; j++){
-				empSchedule.AddTimeSlot(new TimeSlot(j, 0, 24));
+				empSchedule.AddTimeSlot(new TimeSlot(j, 0, 20));
 			}
 			String name = "Staff(" + i + ")";
 			staff[i] = new Employee(i, name, 40, empSchedule);

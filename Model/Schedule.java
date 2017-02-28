@@ -16,7 +16,7 @@ public class Schedule {
 		
 	}
 	
-	public Schedule MakeNewSchedule(){
+	public Schedule MakeNewSchedule(Employee[] staff){
 		Schedule newSchedule = new Schedule();
 		
 		

@@ -2,17 +2,20 @@ import java.util.ArrayList;
 
 public class Schedule {
 	
-	ArrayList<TimeSlot>[] timeBlocks;
+	public ArrayList<TimeSlot>[] timeBlocks;
+	public ArrayList<TimeSlot> blockPool;
+	
 	
 	
 	public Schedule(){
 		
-		timeBlocks = new ArrayList[7];
+		this.timeBlocks = new ArrayList[7];
+		this.blockPool = new ArrayList();
 
 	}
 	
-	public void AddTimeSlot(TimeSlot slot){
-		timeBlocks[slot.day].add(slot);
+	public void AddTimeBlock(TimeSlot slot){
+		this.timeBlocks[slot.day].add(slot);
 		
 	}
 	

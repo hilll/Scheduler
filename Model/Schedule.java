@@ -8,6 +8,7 @@ public class Schedule {
 	public ArrayList<TimeSlot>[] timeBlocks;
 	public ArrayList<TimeSlot> blockPool;
 	public int totalBlocks;
+
 	
 	
 	
@@ -22,7 +23,9 @@ public class Schedule {
 
 	}
 	
-	public void addTimeBlock(TimeSlot slot){
+	public void addTimeBlock( int day, int start, int end, String empType){
+		
+		TimeSlot slot = new TimeSlot(totalBlocks, day, start, end, empType);
 		this.timeBlocks[slot.day].add(slot);
 		this.totalBlocks++;
 		
@@ -50,6 +53,14 @@ public class Schedule {
 		}
 		
 	}
+	public void fillCompanyPool(){
+		
+		for(int day = 0; day < 7; day++){	//time blocks this has
+			for(TimeSlot thisSlot : this.timeBlocks[day] ){
+					this.blockPool.add(thisSlot);
+			}	
+		}
+	}
 	
 	public Schedule generateNewSchedule(Schedule compSchedule, Employee[] staff) {
 		
@@ -60,16 +71,22 @@ public class Schedule {
 		
 		int numBlocks = compSchedule.totalBlocks;
 		int numRounds = 0;
-		while(numBlocks > 0 && numRounds < compSchedule.totalBlocks ){		//START TMA
+		while(numBlocks > 0 && numRounds < (compSchedule.blockPool.size()-10) ){		//START TMA
 			for(Employee emp : staff){
-				TimeSlot empChoice = emp.empAvailability.blockPool.get(numRounds);
-				TimeSlot shift = compSchedule.getTimeBlock(empChoice);
-				if(shift.employee == null){
-					shift.employee = emp;
-					numBlocks--;
+				if(numRounds < emp.empAvailability.blockPool.size()){
+					TimeSlot empChoice = emp.empAvailability.blockPool.get(numRounds);
+					TimeSlot shift = compSchedule.getTimeBlock(empChoice);
+					if(shift.employee == null){
+						shift.employee = emp;
+						numBlocks--;
+					}
 				}
+				
 			}
 			numRounds++;
+		}
+		if(numBlocks != 0){
+			System.out.println("SOME SHIFTS LEFT OPEN");
 		}
 		
 		//Fill TimeBlock
@@ -79,6 +96,11 @@ public class Schedule {
 	}
 	
 	public void buildTimeBlocksFromPool(){
+		this.timeBlocks = new ArrayList[7];
+		for(int i = 0; i < this.timeBlocks.length ; ++i){
+			this.timeBlocks[i] = new ArrayList<TimeSlot>();
+		}
+		
 		for(TimeSlot block : this.blockPool){
 			this.timeBlocks[block.day].add(block);
 		}
@@ -109,8 +131,8 @@ public class Schedule {
 	}
 	
 	public void printSchedule(){
-		System.out.println("\t| 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 ");
-		String dash = "--------------------------------------------------------------------------------";
+		System.out.println("\n\n\t| 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 ");
+		String dash = "================================================================================";
 		System.out.println( dash);
 		String[] days = {"Sun\t","Mon\t", "Tues\t", "Wed\t", "Thur\t", "Fri\t", "Sat\t"};
 		for(int i = 0; i < days.length; i++){
@@ -118,6 +140,7 @@ public class Schedule {
 			for(int block = 0 ;block < this.timeBlocks[i].size(); block++){
 				if(firstBlock){
 					System.out.print(days[i]+"|");
+					
 					firstBlock = false;
 				}
 				else{
@@ -127,7 +150,15 @@ public class Schedule {
 				boolean inBlock= false;
 				for(int c = 0 ; c < 75; c+=3){
 					if(this.timeBlocks[i].get(block).start == (c/3)){
-						System.out.print("|--");
+						System.out.print("|");
+						
+						if(this.timeBlocks[i].get(block).employee != null){
+							String name = this.timeBlocks[i].get(block).employee.empName + "----------";
+							System.out.print(name.substring(0, 8));
+						}
+						else
+							System.out.print("null----");
+						c+=8;
 						inBlock = true;
 					}
 					if(this.timeBlocks[i].get(block).end == (c/3)+1){

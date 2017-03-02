@@ -6,13 +6,15 @@ public class Main {
 		/* DUmmy Company Scedule, 2 10 hour shifts a day, 7 day of the week */
 		Schedule compSchedule = new Schedule();
 		for(int i = 0; i < 7; i++){
-			compSchedule.addTimeBlock(new TimeSlot(i, 0, 10, "worker"));
-			compSchedule.addTimeBlock(new TimeSlot(i, 10, 20, "worker"));
+			compSchedule.addTimeBlock(i, 0, 10, "worker");
+			compSchedule.addTimeBlock(i, 1, 11, "worker");
+			compSchedule.addTimeBlock(i, 10, 20, "worker");
 		}
 		
 		
 		//Fill Company Pool with Shifts
-		compSchedule.fillBlockPool(compSchedule);
+		compSchedule.fillCompanyPool();
+
 		
 		
 		/* Intialize Dummy Employee workers*/
@@ -21,7 +23,7 @@ public class Main {
 			// Assign open availability all day
 			Schedule empSchedule = new Schedule();
 			for(int j = 0; j < 7; j++){
-				empSchedule.addTimeBlock(new TimeSlot(j, 0, 20, "worker"));
+				empSchedule.addTimeBlock(j, 0, 20, "worker");
 			}
 			
 			//Fill employee shiftpool
@@ -30,8 +32,8 @@ public class Main {
 			//Set prefrences - iteration 1 = RANDOMIZE
 			empSchedule.setSchedulePrefrences();
 			
-			
-			String name = "worker(" + i + ")";
+			//Set Name
+			String name = "worker" + i ;
 			staff[i] = new Employee(i, name, 40, empSchedule);
 		}
 		

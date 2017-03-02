@@ -35,8 +35,9 @@ public class Main {
 			staff[i] = new Employee(i, name, 40, empSchedule);
 		}
 		
+		Schedule NewSchedule = compSchedule.generateNewSchedule(compSchedule, staff);
 		
-		
+		NewSchedule.printSchedule();
 		
 		
 	}

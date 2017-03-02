@@ -22,5 +22,12 @@ public class TimeSlot {
 		return false;
 	}
 	
+	public boolean isEqual(TimeSlot that){
+		if(this.employeeType.equals(that.employeeType) && this.day == that.day &&
+				this.start == that.start && this.end == that.end){
+			return true;
+		}
+		return false;
+	}
 
 }

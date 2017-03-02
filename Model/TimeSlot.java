@@ -4,12 +4,14 @@ public class TimeSlot {
 	public int day;
 	public int start;
 	public int end;
+	public String employeeType;
 	public Employee employee;
 	
-	public TimeSlot(int d, int start, int end){
+	public TimeSlot(int d, int start, int end, String type){
 		this.day = d;
 		this.start=start;
 		this.end = end;
+		this.employeeType = type;
 		employee = null;
 	}
 	
@@ -19,5 +21,6 @@ public class TimeSlot {
 		}
 		return false;
 	}
+	
 
 }

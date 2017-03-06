@@ -15,7 +15,6 @@ public class LoginDummyAccount {
 		
 		Account account = new Account();
 		account.LoadAccount();
-		//displayDummyAccount(account);
 		
 		startUserInterface(account);
 		
@@ -51,7 +50,9 @@ public class LoginDummyAccount {
 				displaySchedule = account.getCurrentSchedule();
 				break;
 			case 2: // Create Shift, day=0, start=8, end=17, type=worker
-				account.createShift(0, 8, 17, "worker");	//creates shift id=21
+				int day = 0; int start = 8; int end = 17; String type = "worker";
+				System.out.printf("Creating Shift day=%s start=%d end=%d type=%s\n", day, start, end, type);
+				account.createShift(day, start, end, type);	//creates shift id=21
 				displaySchedule = account.getMasterSchedule();
 				
 				break;
@@ -78,16 +79,6 @@ public class LoginDummyAccount {
 		
 	}
 
-	private static void displayDummyAccount(Account account) {
-		System.out.println("Employee Name: " + account.employee.empName);
-		System.out.println("Employee Availability Schedule");
-		account.employee.empAvailability.printSchedule();
-		System.out.println("Business Master Schedule");
-		account.employee.business.masterSchedule.printSchedule();
-		System.out.println("\nBusiness Current Schedule");
-		account.employee.business.currentSchedule.printSchedule();
-		
-	}
 
 	private static void saveNewDummyAccount() {
 		Account account = new Account();

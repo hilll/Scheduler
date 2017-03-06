@@ -145,7 +145,7 @@ public class Schedule implements Serializable{
 							System.out.print(name.substring(0, 8));
 						}
 						else
-							System.out.printf("%2d------", this.timeBlocks[i].get(block).id);
+							System.out.printf("id=%2d---", this.timeBlocks[i].get(block).id);
 						c+=8;
 						inBlock = true;
 					}

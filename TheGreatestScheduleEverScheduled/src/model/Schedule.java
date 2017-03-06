@@ -26,9 +26,9 @@ public class Schedule implements Serializable{
 
 	}
 	
-	public void addTimeBlock( int day, int start, int end, String empType){
+	public void addTimeBlock( int day, int start, int end, String empType, Employee emp){
 		
-		TimeSlot slot = new TimeSlot(totalBlocks, day, start, end, empType);
+		TimeSlot slot = new TimeSlot(totalBlocks, day, start, end, empType, emp);
 		this.timeBlocks[slot.day].add(slot);
 		this.totalBlocks++;
 		
@@ -78,7 +78,7 @@ public class Schedule implements Serializable{
 			for(Employee emp : staff){
 				if(numRounds < emp.empAvailability.blockPool.size()){
 					TimeSlot empChoice = emp.empAvailability.blockPool.get(numRounds);
-					TimeSlot shift = compSchedule.getTimeBlock(empChoice);
+					TimeSlot shift = newSchedule.getTimeBlock(empChoice);
 					if(shift.employee == null){
 						shift.employee = emp;
 						numBlocks--;
@@ -111,7 +111,7 @@ public class Schedule implements Serializable{
 	
 	private void copyBlockPool(Schedule that) {
 		for(TimeSlot slot : that.blockPool){
-			this.blockPool.add(slot);
+			this.blockPool.add(new TimeSlot(slot.id, slot.day, slot.start, slot.end, slot.employeeType));
 		}
 	}
 
@@ -134,7 +134,7 @@ public class Schedule implements Serializable{
 	}
 	
 	public void printSchedule(){
-		System.out.println("\n\n\t| 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 ");
+		System.out.println("\t| 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 ");
 		String dash = "================================================================================";
 		System.out.println( dash);
 		String[] days = {"Sun\t","Mon\t", "Tues\t", "Wed\t", "Thur\t", "Fri\t", "Sat\t"};
@@ -180,6 +180,7 @@ public class Schedule implements Serializable{
 			}
 			System.out.println( dash);
 		}
+		System.out.println();
 	}
 
 }

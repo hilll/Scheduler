@@ -1,13 +1,15 @@
 package model;
 
-public class TimeSlot {
+import java.io.Serializable;
+
+public class TimeSlot implements Serializable {
 	
 	public int day;
 	public int start;
 	public int end;
 	public String employeeType;
 	public Employee employee;
-	private int id;
+	public int id;
 	
 	public TimeSlot(int id, int d, int start, int end, String type){
 		this.day = d;
@@ -16,6 +18,14 @@ public class TimeSlot {
 		this.employeeType = type;
 		this.id =id;
 		this.employee = null;
+	}
+	public TimeSlot(int id, int d, int start, int end, String type, Employee emp){
+		this.day = d;
+		this.start=start;
+		this.end = end;
+		this.employeeType = type;
+		this.id =id;
+		this.employee = emp;
 	}
 	
 	public boolean canFit(TimeSlot that){

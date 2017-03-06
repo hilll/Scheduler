@@ -1,11 +1,12 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Random;
 
-public class Schedule {
+public class Schedule implements Serializable{
 	
 	public ArrayList<TimeSlot>[] timeBlocks;
 	public ArrayList<TimeSlot> blockPool;

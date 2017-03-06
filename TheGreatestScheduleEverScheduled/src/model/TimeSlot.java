@@ -27,8 +27,6 @@ public class TimeSlot {
 	
 	public boolean isEqual(TimeSlot that){
 		
-//		if(this.employeeType.equals(that.employeeType) && this.day == that.day &&
-//				this.start == that.start && this.end == that.end && this.employee.equals(that.employee)){
 		if(this.id == that.id){
 			return true;
 		}

@@ -1,6 +1,8 @@
 package model;
 
-public class Employee {
+import java.io.Serializable;
+
+public class Employee implements Serializable {
 	
 	int empID;
 	String empName;

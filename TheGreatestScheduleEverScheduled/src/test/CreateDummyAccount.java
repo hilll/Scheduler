@@ -2,7 +2,7 @@ package test;
 
 import model.*;
 
-public class Main {
+public class CreateDummyAccount {
 	
 	public static void main(String args[]){
 		

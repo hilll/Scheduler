@@ -11,7 +11,8 @@ public class LoginDummyAccount {
 	
 	public static void main(String args[]){
 		
-		saveNewDummyAccount();
+		//Saves a new dummy account, this is not used by WUI (Web User Interface)
+		//saveNewDummyAccount();
 		
 		Account account = new Account();
 		account.LoadAccount();

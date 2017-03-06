@@ -34,6 +34,17 @@ public class Schedule implements Serializable{
 		
 	}
 	
+	public void removeTimeBlock(int slotID){
+		for(int day = 0; day < 7; day++){
+			for(int i = 0 ; i < this.timeBlocks[day].size(); i++){
+				if(this.timeBlocks[day].get(i).id == slotID){
+					this.timeBlocks[day].remove(i);
+				}
+			}
+		}
+		
+	}
+	
 	public Schedule makeNewSchedule(Employee[] staff){
 		Schedule newSchedule = new Schedule();
 		
@@ -42,7 +53,7 @@ public class Schedule implements Serializable{
 	}
 	
 	public void fillBlockPool(Schedule company){
-			
+		this.blockPool = new ArrayList<TimeSlot>();
 		for(int day = 0; day < this.timeBlocks.length; day++){	//time blocks this has
 			for(TimeSlot thisSlot : this.timeBlocks[day] ){
 				for(TimeSlot thatSlot : company.timeBlocks[day]){	//time blocks that has
@@ -57,7 +68,10 @@ public class Schedule implements Serializable{
 		
 	}
 	public void fillCompanyPool(){
+		//empty old pool
+		this.blockPool = new ArrayList();
 		
+		//add Time Blocks back in
 		for(int day = 0; day < 7; day++){	//time blocks this has
 			for(TimeSlot thisSlot : this.timeBlocks[day] ){
 					this.blockPool.add(thisSlot);
@@ -65,38 +79,7 @@ public class Schedule implements Serializable{
 		}
 	}
 	
-	public Schedule generateNewSchedule(Schedule compSchedule, Employee[] staff) {
-		
-		//Intitalize new schedule with company block Pool
-		Schedule newSchedule = new Schedule();
-		newSchedule.copyBlockPool(compSchedule);
-		
-		
-		int numBlocks = compSchedule.totalBlocks;
-		int numRounds = 0;
-		while(numBlocks > 0 && numRounds < (compSchedule.blockPool.size()-10) ){		//START TMA
-			for(Employee emp : staff){
-				if(numRounds < emp.empAvailability.blockPool.size()){
-					TimeSlot empChoice = emp.empAvailability.blockPool.get(numRounds);
-					TimeSlot shift = newSchedule.getTimeBlock(empChoice);
-					if(shift.employee == null){
-						shift.employee = emp;
-						numBlocks--;
-					}
-				}
-				
-			}
-			numRounds++;
-		}
-		if(numBlocks != 0){
-			System.out.println("SOME SHIFTS LEFT OPEN");
-		}
-		
-		//Fill TimeBlock
-		newSchedule.buildTimeBlocksFromPool();
-		
-		return newSchedule;
-	}
+	
 	
 	public void buildTimeBlocksFromPool(){
 		this.timeBlocks = new ArrayList[7];
@@ -109,7 +92,7 @@ public class Schedule implements Serializable{
 		}
 	}
 	
-	private void copyBlockPool(Schedule that) {
+	public void copyBlockPool(Schedule that) {
 		for(TimeSlot slot : that.blockPool){
 			this.blockPool.add(new TimeSlot(slot.id, slot.day, slot.start, slot.end, slot.employeeType));
 		}
@@ -139,6 +122,8 @@ public class Schedule implements Serializable{
 		System.out.println( dash);
 		String[] days = {"Sun\t","Mon\t", "Tues\t", "Wed\t", "Thur\t", "Fri\t", "Sat\t"};
 		for(int i = 0; i < days.length; i++){
+			
+			//Print day name if first time block, else aline with header
 			boolean firstBlock = true;
 			for(int block = 0 ;block < this.timeBlocks[i].size(); block++){
 				if(firstBlock){
@@ -160,7 +145,7 @@ public class Schedule implements Serializable{
 							System.out.print(name.substring(0, 8));
 						}
 						else
-							System.out.print("null----");
+							System.out.printf("%2d------", this.timeBlocks[i].get(block).id);
 						c+=8;
 						inBlock = true;
 					}

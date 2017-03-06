@@ -1,8 +1,13 @@
 package test;
 
+import java.sql.SQLException;
+import java.util.Scanner;
+
 import model.*;
 
-public class CreateDummyAccount {
+public class LoginDummyAccount {
+	
+	static Scanner input = new Scanner(System.in);
 	
 	public static void main(String args[]){
 		
@@ -10,8 +15,66 @@ public class CreateDummyAccount {
 		
 		Account account = new Account();
 		account.LoadAccount();
-		displayDummyAccount(account);
+		//displayDummyAccount(account);
 		
+		startUserInterface(account);
+		
+		
+	}
+
+	private static void startUserInterface(Account account) {
+		Schedule displaySchedule = null;
+		while(true){
+			
+			
+			System.out.println("\n\nOptions\n--------------");
+			String[] options = {"Display Master Schedule",
+								"Display Current Schedule",
+								"Create Shift",
+								"Delete Shift",
+								"Create New Current Schedule",
+								"Quit"};
+			int choice;
+			for(int i = 0; i < options.length; i++){
+				System.out.println(i + ") " + options[i]);
+			}
+			//get user input
+			System.out.print("Please choose option > ");
+			choice = input.nextInt();
+			input.nextLine();
+			
+			switch(choice){
+			case 0: //Display Master Schedule
+				displaySchedule = account.getMasterSchedule();
+				break;
+			case 1: // Display Current Schedule
+				displaySchedule = account.getCurrentSchedule();
+				break;
+			case 2: // Create Shift, day=0, start=8, end=17, type=worker
+				account.createShift(0, 8, 17, "worker");	//creates shift id=21
+				displaySchedule = account.getMasterSchedule();
+				
+				break;
+			case 3: // Delete Shift, id=21
+				account.deleteShift(21);				//removes shift id=21
+				displaySchedule = account.getMasterSchedule();
+				break;
+			case 4: // Create New Current Schedule
+				account.createSchedule();
+				displaySchedule = account.getCurrentSchedule();
+				
+				break;
+			case 5: // Quit
+				System.out.println("Quiting.... All changes WILL NOT be saved");
+				return;
+			default:
+				System.out.println("Choice Not Found, Please try again");
+				break;
+			}
+			
+			//Print current display Schedule
+			displaySchedule.printSchedule();
+		}
 		
 	}
 
@@ -57,13 +120,7 @@ public class CreateDummyAccount {
 			for(int j = 0; j < 7; j++){
 				empSchedule.addTimeBlock(j, 0, 20, "worker", staff[i]);
 			}
-			
-			
-			//Fill employee shiftpool
-			empSchedule.fillBlockPool(businessSchedule);
-			
-			//Set prefrences - iteration 1 = RANDOMIZE
-			empSchedule.setSchedulePrefrences();
+
 			
 			
 		}
@@ -77,20 +134,14 @@ public class CreateDummyAccount {
 			for(int j = 0; j < 7; j++){
 				empSchedule.addTimeBlock(j, 0, 20, "manager", staff[i]);
 			}
-			
-			//Fill employee shiftpool
-			empSchedule.fillBlockPool(businessSchedule);
-			
-			//Set prefrences - iteration 1 = RANDOMIZE
-			empSchedule.setSchedulePrefrences();
-			
+			//name increament
 			k++;
 			
 		}
 		
 		//Finish initializing dummy business
-		business.employees = staff;
-		business.currentSchedule = businessSchedule.generateNewSchedule(businessSchedule, staff);
+		business.staff = staff;
+		business.generateNewSchedule();
 		
 		//Initialize account
 		staff[10].business = business;

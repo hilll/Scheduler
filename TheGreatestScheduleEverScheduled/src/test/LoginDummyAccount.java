@@ -23,6 +23,18 @@ public class LoginDummyAccount {
 
 	private static void startUserInterface(Account account) {
 		Schedule displaySchedule = null;
+		System.out.println("Welcome the The Greatest Schedule Ever Scheduled");
+		System.out.println("=================================================");
+		System.out.println("Concepts, there are two different schedules.....");
+		System.out.println("\tMaster Schedule = The business's schedule of shifts in needs to fill with the shift id displayed");
+		System.out.println("\tCurrent Schedule = The currently generated schedule for the week");
+		System.out.println("");
+		System.out.println("Actions");
+		System.out.println("\tDisplay = Shows that edition of the schdule");
+		System.out.println("\tCreate Shift = Will add a predetermined shift to the Master schedule (it will not appear until a new current schedule is created)");
+		System.out.println("\tDelete Shift = Will delete the pretermined shift");
+		System.out.println("\tCreate Schedule = Generate a new current schedule");
+		System.out.println("");
 		while(true){
 			
 			

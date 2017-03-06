@@ -66,7 +66,7 @@ public class Account implements Serializable{
 	        out.writeObject(account.employee);
 	        out.close();
 	        fileOut.close();
-	        System.out.println("Serialized data is saved in AccountData/account.ser");
+	        //System.out.println("Serialized data is saved in AccountData/account.ser");
 	      }catch(IOException i) {
 	         i.printStackTrace();
 	      }

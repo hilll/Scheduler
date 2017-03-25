@@ -17,6 +17,10 @@ public class Account implements Serializable{
 		this.employee = null;
 	}
 	
+	public Account(Employee e){
+		this.employee = e;
+	}
+		
 	public Schedule getMasterSchedule(){
 		return employee.business.masterSchedule;
 	}
@@ -70,6 +74,11 @@ public class Account implements Serializable{
 	      }catch(IOException i) {
 	         i.printStackTrace();
 	      }
+	}
+
+	public Employee getEmployee() {
+		// TODO Auto-generated method stub
+		return employee;
 	}
 	
 

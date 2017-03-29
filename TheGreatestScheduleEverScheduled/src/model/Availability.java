@@ -16,7 +16,7 @@ public class Availability {
 			                                       "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",	   
 												 };
 	// we can change this constant to alter the shortest shifts an employee will be scheduled for
-	private final int MIN_SHIFT_LENGTH = 16; //hours * (4 blocks per hour)
+	private final int MIN_SHIFT_LENGTH = 1; // hours * (4 blocks per hour)
 	// array of lists (one for each day of the week) of TimeBlocks employee is available to work
 	private ArrayList<ArrayList<TimeSlot>> availabilityByDay;
 	//private ArrayList<TimeSlot>[] timeBlocks;
@@ -37,10 +37,9 @@ public class Availability {
 		}
 		this.isManager = isManager;
 		this.availabilityByDay = new ArrayList<ArrayList<TimeSlot>>(7);
-		assert(this.availabilityByDay.size() == 7);
-		//for(int i = 0; i < this.timeBlocks.size(); ++i){
-		//	this.timeBlocks.get(i) = new ArrayList<TimeSlot>();
-		//}
+		for(int i = 0; i < 7; ++i){
+			availabilityByDay.add(new ArrayList<TimeSlot>());
+		}
 		this.availabilityPool = new ArrayList<>();
 		this.unavailabilityList = new ArrayList<>();
 		for (int i = 0; i < 7; i++)
@@ -84,13 +83,23 @@ public class Availability {
 					}
 				}
 				streakType = curr;
+			} else {
+				if (c == daysAvailability.length() - 1) {
+					if (streakType == 0) {
+						unavailableEnd = c;
+						addUnavailability(day, unavailableStart, unavailableEnd);
+					} else {
+						availableEnd = c;
+						addAvailability(day, availableStart, availableEnd);
+					}
+				}
+				continue;
 			}
 		}
 	}
 	
 	public void addUnavailability(int day, int start, int end) {
-		TimeSlot slot = new TimeSlot(totalUnavailabilityBlocks, day, start, end, isManager);
-		totalUnavailabilityBlocks++;
+		TimeSlot slot = new TimeSlot(-1, day, start, end, isManager);
 		unavailabilityList.add(slot);
 	}
 	
@@ -108,8 +117,7 @@ public class Availability {
 	}
 	
 	public void addAvailability(int day, int start, int end) {
-		TimeSlot slot = new TimeSlot(totalAvailabilityBlocks, day, start, end, isManager);
-		totalAvailabilityBlocks++;
+		TimeSlot slot = new TimeSlot(-1, day, start, end, isManager);
 		this.availabilityByDay.get(day).add(slot);
 	}
 	
@@ -163,5 +171,13 @@ public class Availability {
 	
 	public String[] getAvailabilityStrings() {
 		return availabilityStrings;
+	}
+	
+	public ArrayList<ArrayList<TimeSlot>> getAvailabilityByDay() {
+		return availabilityByDay;
+	}
+	
+	public ArrayList<TimeSlot> getUnavailabilityList() {
+		return unavailabilityList;
 	}
 }

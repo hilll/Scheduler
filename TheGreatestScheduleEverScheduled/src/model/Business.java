@@ -11,7 +11,7 @@ public class Business {
 	private ArrayList<Employee> staff;
 	
 	public Business(){
-		this.masterSchedule = new Schedule();
+		this.setMasterSchedule(new Schedule());
 		this.currentSchedule = new Schedule();
 		this.previousSchedules = new ArrayList<Schedule>();
 		// Changed this to allow for business growth: this.staff = new Employee[10];
@@ -19,22 +19,22 @@ public class Business {
 	}
 	
 	public void setBusinessMasterSchedule(Schedule schedule){
-		this.masterSchedule=schedule;
+		this.setMasterSchedule(schedule);
 	}
 	
 	public Schedule generateNewSchedule() {
 		
 		//Intitalize new schedule with company block Pool, which is neededShifts?????????
 		Schedule newSchedule = new Schedule();
-		newSchedule.copyBlockPool(masterSchedule);
+		newSchedule.copyBlockPool(getMasterSchedule());
 		
 		//Initialize employee block pools
 		initializeStaffPools();
 		
 		
-		int numBlocks = masterSchedule.getAllShiftsPool().size();
+		int numBlocks = getMasterSchedule().getAllShiftsPool().size();
 		int numRounds = 0;
-		while(numBlocks > 0 && numRounds < (masterSchedule.getAllShiftsPool().size()-10) ){		//START TMA
+		while(numBlocks > 0 && numRounds < (getMasterSchedule().getAllShiftsPool().size()-10) ){		//START TMA
 			for(Employee emp : staff){
 				if(numRounds < emp.getAvailability().getAvailabilityPool().size()){
 					TimeSlot empChoice = emp.getAvailability().getAvailabilityPool().get(numRounds);
@@ -66,7 +66,7 @@ public class Business {
 	private void initializeStaffPools() {
 		for(Employee emp : staff){
 			//Fill employee shiftpool
-			emp.getAvailability().fillBlockPool(masterSchedule);
+			emp.getAvailability().fillBlockPool(getMasterSchedule());
 			
 			//Set preferences - iteration 1 = RANDOMIZE
 			emp.getAvailability().setSchedulePrefrences();
@@ -74,13 +74,47 @@ public class Business {
 	}
 
 	public void createTimeBlock(int day, int start, int end, boolean isManager){
-		masterSchedule.addTimeBlock(day, start, end, isManager, null);
-		masterSchedule.fillCompanyPool();
+		getMasterSchedule().addTimeBlock(day, start, end, isManager, null);
+		getMasterSchedule().fillCompanyPool();
 	}
 
 	public void removeTimeBlock(int slotID) {
-		masterSchedule.removeTimeBlock(slotID);
-		masterSchedule.fillCompanyPool();
+		getMasterSchedule().removeTimeBlock(slotID);
+		getMasterSchedule().fillCompanyPool();
+	}
+	
+	public void addEmployee(Employee emp) {
+		staff.add(emp);
+	}
+	
+	/*
+	 * removes employee & returns true if it exists in the business's staff,
+	 * else returns false
+	 */
+	public boolean removeEmployee(Employee emp) {
+		for (Employee e : staff) {
+			if (e.equals(emp)) {
+				staff.remove(e);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public Schedule getMasterSchedule() {
+		return masterSchedule;
+	}
+	
+	public Schedule getCurrentSchedule() {
+		return currentSchedule;
+	}
+
+	public void setMasterSchedule(Schedule masterSchedule) {
+		this.masterSchedule = masterSchedule;
+	}
+	
+	public void setStaff(ArrayList<Employee> staff) {
+		this.staff = staff;
 	}
 
 }

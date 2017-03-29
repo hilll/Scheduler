@@ -1,6 +1,6 @@
 package model;
 
-public class Employee {
+public class Employee implements Comparable<Employee> {
 	
 	private int empID;
 	private String fullName, fname, lname;
@@ -53,6 +53,11 @@ public class Employee {
 	 */
 	public boolean getIsManager() {
 		return isManager;
+	}
+
+	@Override
+	public int compareTo(Employee o) {
+		return this.getID() - o.getID();
 	}
 	
 }

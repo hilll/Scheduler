@@ -12,6 +12,9 @@ public class Schedule {
 	
 	public Schedule(){
 		this.shiftsByDay = new ArrayList<ArrayList<TimeSlot>>(7);
+		for(int i = 0; i < 7; ++i){
+			shiftsByDay.add(new ArrayList<TimeSlot>());
+		}
 		//for(int i = 0; i < this.shiftsByDay.length; ++i){
 		//	this.shiftsByDay[i] = new ArrayList<TimeSlot>();
 		//}
@@ -74,6 +77,9 @@ public class Schedule {
 	
 	public void buildTimeBlocksFromPool(){
 		this.shiftsByDay = new ArrayList<ArrayList<TimeSlot>>(7);
+		for(int i = 0; i < 7; ++i){
+			shiftsByDay.add(new ArrayList<TimeSlot>());
+		}
 		for(TimeSlot block : this.allShiftsPool){
 			this.shiftsByDay.get(block.getDay()).add(block);
 		}
@@ -109,7 +115,7 @@ public class Schedule {
 			
 			//Print day name if first time block, else aline with header
 			boolean firstBlock = true;
-			for(int block = 0 ;block < this.shiftsByDay.get(i).size(); block++){
+			for(int block = 0; block < this.shiftsByDay.get(i).size(); block++){
 				if(firstBlock){
 					System.out.print(days[i]+"|");
 					

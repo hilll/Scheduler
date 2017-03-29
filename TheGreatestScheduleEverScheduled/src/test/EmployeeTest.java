@@ -2,9 +2,13 @@ package test;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 
+import model.Availability;
 import model.Employee;
+import model.TimeSlot;
 
 public class EmployeeTest {
 	
@@ -24,7 +28,7 @@ public class EmployeeTest {
             "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
             "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",	   
 			 };
-	private final String[] availabilitiesTooShort = { "111100000000000000000000000000000000000011111110000000000000000000000000000000000000000000000001",
+	private final String[] smallAvailabilities = { "111100000000000000000000000000000000000011111110000000000000000000000000000000000000000000000001",
 			   "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
          "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
          "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
@@ -48,9 +52,38 @@ public class EmployeeTest {
 		assertEquals("New", newEmp.getFirstName());
 		assertEquals("Employee", newEmp.getLastName());
 		assertEquals("New Employee", newEmp.getFullName());
+		assertFalse(newEmp.getIsManager());
 		for (int i = 0; i < 7; i++) {
 			assertEquals(starterAvailability[i], newEmp.getAvailability().getAvailabilityStrings()[i]);
 		}
+		assertEquals(7, newEmp.getAvailability().getAvailabilityByDay().size());
+		int j;
+		for (j = 0; j < 7; j++) {
+			assertEquals(1, newEmp.getAvailability().getAvailabilityByDay().get(j).size());
+		}
+		assertEquals(0, newEmp.getAvailability().getUnavailabilityList().size());
+		
+		
+		Availability avail = new Availability(completelyUnavailable, newEmp.getIsManager());
+		newEmp.setAvailability(avail);
+		for (j = 0; j < 7; j++) {
+			assertEquals(0, newEmp.getAvailability().getAvailabilityByDay().get(j).size());
+		}
+		assertEquals(7, newEmp.getAvailability().getUnavailabilityList().size());
+		
+		avail = new Availability(availableMornings, newEmp.getIsManager());
+		newEmp.setAvailability(avail);
+		for (j = 0; j < 7; j++) {
+			ArrayList<TimeSlot> slots = newEmp.getAvailability().getAvailabilityByDay().get(j);
+			assertEquals(1, slots.size());
+			TimeSlot curr = slots.get(0);
+			assertEquals(j, curr.getDay());
+			assertEquals(24, curr.getStart());
+			assertEquals(39, curr.getEnd());
+			assertEquals(-1, curr.getID());
+			assertEquals(false, curr.getIsManagerTimeSlot());
+		}
+		assertEquals(14, newEmp.getAvailability().getUnavailabilityList().size());
 	}
 
 }

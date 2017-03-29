@@ -1,40 +1,27 @@
 package model;
 
-import java.io.Serializable;
-
-public class Employee implements Serializable {
+public class Employee {
 	
-	int empID;
-	public String empName, fname, lname; //TODO: change empName to fullName ?
-	int prefHours;
-	public Schedule empAvailability;
-	public Business business;
+	private int empID;
+	private String fullName, fname, lname;
+	//private int prefHours; we could maybe add preferred hours to iteration 3?
+	   // for now I added a public final maxEmpHours into the schedule class
+	   // to make sure employees aren't scheduled > legal/organization limits for a week
+	private boolean isManager;
+	private Availability availability;
 	
 	public static String getTableName() {
 		return "employee";
 	}
-	
-	// for testing
-	public Employee() {
-		
-	}
-	
-	public Employee(int id, String name, int hours, Schedule avail){
-		this.empID = id;
-		this.empName = name;
-		this.prefHours=hours;
-		this.empAvailability = avail;
-		this.business = null;
-	}
 
-	public Employee(int id, String fname, String lname, int hours, Schedule avail, Business b){
+	public Employee(int id, String fname, String lname, String[] avail, boolean isManager){
 		this.empID = id;
-		this.empName = fname + " " + lname;
+		this.fullName = fname + " " + lname;
 		this.fname = fname;
 		this.lname = lname;
-		this.prefHours = hours;
-		this.empAvailability = avail;
-		this.business = b;
+		this.availability = new Availability(avail, isManager);
+		this.isManager = isManager;
+		// TODO add new employee information into the appropriate database tables
 	}
 	
 	public int getID() {
@@ -50,7 +37,22 @@ public class Employee implements Serializable {
 	}
 	
 	public String getFullName() {
-		return empName;
+		return fullName;
+	}
+	
+	public Availability getAvailability() {
+		return availability;
+	}
+	
+	public void setAvailability(Availability avail) {
+		this.availability = avail;
+	}
+	
+	/*
+	 * returns true is this employee is a manager, false otherwise
+	 */
+	public boolean getIsManager() {
+		return isManager;
 	}
 	
 }

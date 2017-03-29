@@ -1,119 +1,103 @@
 package model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Random;
 
-public class Schedule implements Serializable{
+public class Schedule {
 	
-	public ArrayList<TimeSlot>[] timeBlocks;
-	public ArrayList<TimeSlot> blockPool;
-	public int totalBlocks;
-
-	
-	
+	private ArrayList<ArrayList<TimeSlot>> shiftsByDay;
+	private ArrayList<TimeSlot> allShiftsPool;
+	private int totalBlocks;
 	
 	public Schedule(){
-		
-		this.timeBlocks = new ArrayList[7];
-		for(int i = 0; i < this.timeBlocks.length ; ++i){
-			this.timeBlocks[i] = new ArrayList<TimeSlot>();
-		}
-		this.blockPool = new ArrayList();
-		this.totalBlocks=0;
-
+		this.shiftsByDay = new ArrayList<ArrayList<TimeSlot>>(7);
+		//for(int i = 0; i < this.shiftsByDay.length; ++i){
+		//	this.shiftsByDay[i] = new ArrayList<TimeSlot>();
+		//}
+		this.allShiftsPool = new ArrayList<>();
+		this.totalBlocks = 0;
 	}
 	
-	public void addTimeBlock( int day, int start, int end, String empType, Employee emp){
-		
-		TimeSlot slot = new TimeSlot(totalBlocks, day, start, end, empType, emp);
-		this.timeBlocks[slot.day].add(slot);
+	public void addTimeBlock( int day, int start, int end, boolean isManager, Employee emp) {
+		TimeSlot slot = new TimeSlot(totalBlocks, day, start, end, isManager);
+		slot.setEmployee(emp);
+		this.shiftsByDay.get(day).add(slot);
 		this.totalBlocks++;
-		
 	}
 	
-	public void removeTimeBlock(int slotID){
+	/*
+	 * returns true if the TimeBlock with slotID is successfully removed, false if it 
+	 * did not exist.
+	 */
+	public boolean removeTimeBlock(int slotID){
 		for(int day = 0; day < 7; day++){
-			for(int i = 0 ; i < this.timeBlocks[day].size(); i++){
-				if(this.timeBlocks[day].get(i).id == slotID){
-					this.timeBlocks[day].remove(i);
+			for(int i = 0 ; i < this.shiftsByDay.get(day).size(); i++){
+				if(this.shiftsByDay.get(day).get(i).getID() == slotID){
+					this.shiftsByDay.get(day).remove(i);
+					return true;
 				}
 			}
 		}
-		
+		return false;		
 	}
 	
 	public Schedule makeNewSchedule(Employee[] staff){
 		Schedule newSchedule = new Schedule();
-		
-		
 		return newSchedule;	
 	}
 	
-	public void fillBlockPool(Schedule company){
-		this.blockPool = new ArrayList<TimeSlot>();
-		for(int day = 0; day < this.timeBlocks.length; day++){	//time blocks this has
-			for(TimeSlot thisSlot : this.timeBlocks[day] ){
-				for(TimeSlot thatSlot : company.timeBlocks[day]){	//time blocks that has
-					if(thisSlot.canFit(thatSlot)){
-						this.blockPool.add(thatSlot);		//Put shift in emp pool
-					}
-				}
-				
-			}
-			
-		}
-		
-	}
+//	public void fillBlockPool(Schedule company){
+//		this.allShiftsPool = new ArrayList<TimeSlot>();
+//		for(int day = 0; day < this.shiftsByDay.length; day++){	//time blocks this has
+//			for(TimeSlot thisSlot : this.shiftsByDay[day] ){
+//				for(TimeSlot thatSlot : company.shiftsByDay[day]){	//time blocks that has
+//					if(thisSlot.canFit(thatSlot)){
+//						this.allShiftsPool.add(thatSlot);		//Put shift in emp pool
+//					}
+//				}
+//			}
+//		}
+//	}
+	
 	public void fillCompanyPool(){
 		//empty old pool
-		this.blockPool = new ArrayList();
+		this.allShiftsPool = new ArrayList<>();
 		
 		//add Time Blocks back in
 		for(int day = 0; day < 7; day++){	//time blocks this has
-			for(TimeSlot thisSlot : this.timeBlocks[day] ){
-					this.blockPool.add(thisSlot);
+			for(TimeSlot thisSlot : this.shiftsByDay.get(day)){
+					this.allShiftsPool.add(thisSlot);
 			}	
 		}
 	}
 	
-	
-	
 	public void buildTimeBlocksFromPool(){
-		this.timeBlocks = new ArrayList[7];
-		for(int i = 0; i < this.timeBlocks.length ; ++i){
-			this.timeBlocks[i] = new ArrayList<TimeSlot>();
-		}
-		
-		for(TimeSlot block : this.blockPool){
-			this.timeBlocks[block.day].add(block);
+		this.shiftsByDay = new ArrayList<ArrayList<TimeSlot>>(7);
+		for(TimeSlot block : this.allShiftsPool){
+			this.shiftsByDay.get(block.getDay()).add(block);
 		}
 	}
 	
 	public void copyBlockPool(Schedule that) {
-		for(TimeSlot slot : that.blockPool){
-			this.blockPool.add(new TimeSlot(slot.id, slot.day, slot.start, slot.end, slot.employeeType));
+		for(TimeSlot slot : that.allShiftsPool){
+			this.allShiftsPool.add(new TimeSlot(slot.getID(), slot.getDay(), slot.getStart(), slot.getEnd(), slot.getIsManagerTimeSlot()));
 		}
 	}
 
-	public void setSchedulePrefrences(){
-		//Randomize
-		long seed = System.nanoTime();
-		Collections.shuffle(this.blockPool, new Random(seed));
-	}
+//	public void setSchedulePrefrences(){
+//		//Randomize
+//		long seed = System.nanoTime();
+//		Collections.shuffle(this.blockPool, new Random(seed));
+//	}
 	
 	public TimeSlot getTimeBlock(TimeSlot slot){
-		
-		for(TimeSlot block : this.blockPool){
+		for(TimeSlot block : this.allShiftsPool){
 			if(block.isEqual(slot)){
 				return block;
 			}
 		}
 		return null;
-		
-		
 	}
 	
 	public void printSchedule(){
@@ -125,7 +109,7 @@ public class Schedule implements Serializable{
 			
 			//Print day name if first time block, else aline with header
 			boolean firstBlock = true;
-			for(int block = 0 ;block < this.timeBlocks[i].size(); block++){
+			for(int block = 0 ;block < this.shiftsByDay.get(i).size(); block++){
 				if(firstBlock){
 					System.out.print(days[i]+"|");
 					
@@ -137,19 +121,19 @@ public class Schedule implements Serializable{
 				
 				boolean inBlock= false;
 				for(int c = 0 ; c < 75; c+=3){
-					if(this.timeBlocks[i].get(block).start == (c/3)){
+					if(this.shiftsByDay.get(i).get(block).getStart() == (c/3)){
 						System.out.print("|");
 						
-						if(this.timeBlocks[i].get(block).employee != null){
-							String name = this.timeBlocks[i].get(block).employee.empName + "----------";
+						if(this.shiftsByDay.get(i).get(block).getEmployee() != null){
+							String name = this.shiftsByDay.get(i).get(block).getEmployee().getFullName() + "----------";
 							System.out.print(name.substring(0, 8));
 						}
 						else
-							System.out.printf("id=%2d---", this.timeBlocks[i].get(block).id);
+							System.out.printf("id=%2d---", this.shiftsByDay.get(i).get(block).getID());
 						c+=8;
 						inBlock = true;
 					}
-					if(this.timeBlocks[i].get(block).end == (c/3)+1){
+					if(this.shiftsByDay.get(i).get(block).getEnd() == (c/3)+1){
 						System.out.print("|\n");
 						inBlock = false;
 						break;
@@ -166,6 +150,14 @@ public class Schedule implements Serializable{
 			System.out.println( dash);
 		}
 		System.out.println();
+	}
+
+	public ArrayList<TimeSlot> getAllShiftsPool() {
+		return allShiftsPool;
+	}
+	
+	public ArrayList<ArrayList<TimeSlot>> getShiftsByDay() {
+		return shiftsByDay;
 	}
 
 }

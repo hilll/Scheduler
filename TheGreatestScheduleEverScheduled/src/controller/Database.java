@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import model.Employee;
+import model.Schedule;
 
 /* the database is named "ccdb" which stands for cool cucumber database
  the tables that currently exist are:
@@ -37,7 +38,7 @@ public class Database {
 		System.out.println();
 
 		// adding a new employee to the DB
-		Employee e = new Employee(getNextIDForTable(Employee.getTableName()), "Test", "Person", 0, null, null);
+		Employee e = new Employee(getNextIDForTable(Employee.getTableName()), "Test", "Person", null, false);
 		System.out.println("Inserting new Employee: " + e.getFullName());
 		insert(e);
 		System.out.println("Data in employee table: ");

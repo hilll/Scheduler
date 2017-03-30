@@ -85,5 +85,23 @@ public class EmployeeTest {
 		}
 		assertEquals(14, newEmp.getAvailability().getUnavailabilityList().size());
 	}
+	
+	@Test
+	public void testInsertAndDelete() {
+		// placeholder
+	}
 
+	@Test
+	public void testUpdate() {
+		// placeholder
+	}
+	
+	@Test
+	public void testLogin() {
+		assertEquals(Employee.getIDForLogin("swhite", "swhite"), 0);
+		assertEquals(Employee.getIDForLogin("kwalters", "kwalters"), 1);
+		assertEquals(Employee.getIDForLogin("rkaye", "rkaye"), 2);
+		assertEquals(Employee.getIDForLogin("lhill", "lhill"), 3);
+		assertEquals(Employee.getIDForLogin("INVALID", "INVALID"), -1);
+	}
 }

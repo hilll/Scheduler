@@ -47,7 +47,7 @@ public class EmployeeTest {
 
 	@Test
 	public void test() {
-		Employee newEmp = new Employee(0, "New", "Employee", null, false);
+		Employee newEmp = new Employee(0, "New", "Employee", "email",  null, false);
 		assertEquals(0, newEmp.getID());
 		assertEquals("New", newEmp.getFirstName());
 		assertEquals("Employee", newEmp.getLastName());

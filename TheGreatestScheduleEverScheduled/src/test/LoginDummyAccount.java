@@ -9,13 +9,11 @@ import model.*;
 public class LoginDummyAccount {
 	
 	static Scanner input = new Scanner(System.in);
+	static Account account;
 	
 	public static void main(String args[]){
 		
-		//Saves a new dummy account, this is not used by WUI (Web User Interface)
-		//saveNewDummyAccount();
-		
-		Account account = new Account();
+		account = new Account();
 		
 		startUserInterface(account);
 	}
@@ -96,7 +94,7 @@ public class LoginDummyAccount {
 		Business business = new Business();
 		
 		// DUmmy Company Scedule, 2 10 hour shifts a day, 7 day of the week
-		Schedule businessSchedule = new Schedule();
+		Schedule businessSchedule = new Schedule(account.getBusiness());
 		for(int i = 0; i < 7; i++){
 			businessSchedule.addTimeBlock(i, 0, 10, false, null);
 			businessSchedule.addTimeBlock(i, 10, 20, false, null);
@@ -116,31 +114,24 @@ public class LoginDummyAccount {
 		int i;
 		for( i = 0; i < 10; ++i){
 			// Assign open availability all day
-			Schedule empSchedule = new Schedule();
-			String fname = "worker" + i ;
+			String fname = "worker" + i;
 			String lname = "Bee";
-			//staff[i] = new Employee(i, name, 40, empSchedule);
 			Employee e = new Employee(i, fname, lname, null, false);
 			staff.add(e);
-			for(int j = 0; j < 7; j++){
-				empSchedule.addTimeBlock(j, 0, 20, false, e);
-			}
-
-			
-			
+//			for(int j = 0; j < 7; j++){
+//				empSchedule.addTimeBlock(j, 0, 20, false, e);
+//			}
 		}
 		// Intialize Dummy Employee workers
 		for( int k = 0; k < 12; ++k){
 			// Assign open availability all day
-			Schedule empSchedule = new Schedule();
+			//Schedule empSchedule = new Schedule(account.getBusiness());
 			String fname = "manager" + k;
 			String lname = "Bee";
 			Employee e = new Employee(i, fname, lname, null, true);
-			//staff[i] = new Employee(i, name, 40, empSchedule);
-			
-			for(int j = 0; j < 7; j++){
-				empSchedule.addTimeBlock(j, 0, 20, true, e);
-			}
+//			for(int j = 0; j < 7; j++){
+//				empSchedule.addTimeBlock(j, 0, 20, true, e);
+//			}
 			//name increament
 			k++;
 			

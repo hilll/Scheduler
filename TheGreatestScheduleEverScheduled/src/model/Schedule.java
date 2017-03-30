@@ -1,32 +1,26 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
 
 public class Schedule {
 	
 	private ArrayList<ArrayList<TimeSlot>> shiftsByDay;
 	private ArrayList<TimeSlot> allShiftsPool;
-	private int totalBlocks;
+	private Business bus;
 	
-	public Schedule(){
+	public Schedule(Business bus){
+		this.bus = bus;
 		this.shiftsByDay = new ArrayList<ArrayList<TimeSlot>>(7);
 		for(int i = 0; i < 7; ++i){
 			shiftsByDay.add(new ArrayList<TimeSlot>());
 		}
-		//for(int i = 0; i < this.shiftsByDay.length; ++i){
-		//	this.shiftsByDay[i] = new ArrayList<TimeSlot>();
-		//}
 		this.allShiftsPool = new ArrayList<>();
-		this.totalBlocks = 0;
 	}
 	
 	public void addTimeBlock( int day, int start, int end, boolean isManager, Employee emp) {
-		TimeSlot slot = new TimeSlot(totalBlocks, day, start, end, isManager);
+		TimeSlot slot = new TimeSlot(bus.getNewTimeSlotID(), day, start, end, isManager);
 		slot.setEmployee(emp);
 		this.shiftsByDay.get(day).add(slot);
-		this.totalBlocks++;
 	}
 	
 	/*
@@ -46,26 +40,13 @@ public class Schedule {
 	}
 	
 	public Schedule makeNewSchedule(Employee[] staff){
-		Schedule newSchedule = new Schedule();
+		Schedule newSchedule = new Schedule(this.bus);
 		return newSchedule;	
 	}
 	
-//	public void fillBlockPool(Schedule company){
-//		this.allShiftsPool = new ArrayList<TimeSlot>();
-//		for(int day = 0; day < this.shiftsByDay.length; day++){	//time blocks this has
-//			for(TimeSlot thisSlot : this.shiftsByDay[day] ){
-//				for(TimeSlot thatSlot : company.shiftsByDay[day]){	//time blocks that has
-//					if(thisSlot.canFit(thatSlot)){
-//						this.allShiftsPool.add(thatSlot);		//Put shift in emp pool
-//					}
-//				}
-//			}
-//		}
-//	}
-	
 	public void fillCompanyPool(){
 		//empty old pool
-		this.allShiftsPool = new ArrayList<>();
+		this.allShiftsPool.clear();
 		
 		//add Time Blocks back in
 		for(int day = 0; day < 7; day++){	//time blocks this has
@@ -90,12 +71,6 @@ public class Schedule {
 			this.allShiftsPool.add(new TimeSlot(slot.getID(), slot.getDay(), slot.getStart(), slot.getEnd(), slot.getIsManagerTimeSlot()));
 		}
 	}
-
-//	public void setSchedulePrefrences(){
-//		//Randomize
-//		long seed = System.nanoTime();
-//		Collections.shuffle(this.blockPool, new Random(seed));
-//	}
 	
 	public TimeSlot getTimeBlock(TimeSlot slot){
 		for(TimeSlot block : this.allShiftsPool){
@@ -164,6 +139,10 @@ public class Schedule {
 	
 	public ArrayList<ArrayList<TimeSlot>> getShiftsByDay() {
 		return shiftsByDay;
+	}
+	
+	public Business getBusiness() {
+		return this.bus;
 	}
 
 }

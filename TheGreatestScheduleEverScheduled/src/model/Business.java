@@ -2,7 +2,7 @@ package model;
 import java.util.ArrayList;
 
 public class Business {
-	
+	private int timeSlotID = 0;
 	private final int MAX_EMP_HOURS = 100; // (25 hours per week * 4 time blocks per hour)
 	private final int MAX_MANAGER_HOURS = 160; // (40 hours per week * 4 time blocks per hour)
 	private Schedule masterSchedule;
@@ -11,8 +11,8 @@ public class Business {
 	private ArrayList<Employee> staff;
 	
 	public Business(){
-		this.setMasterSchedule(new Schedule());
-		this.currentSchedule = new Schedule();
+		this.setMasterSchedule(new Schedule(this));
+		this.currentSchedule = new Schedule(this);
 		this.previousSchedules = new ArrayList<Schedule>();
 		// Changed this to allow for business growth: this.staff = new Employee[10];
 		this.staff = new ArrayList<Employee>();
@@ -22,10 +22,14 @@ public class Business {
 		this.setMasterSchedule(schedule);
 	}
 	
+	public int getNewTimeSlotID() {
+		timeSlotID++;
+		return timeSlotID;
+	}
+	
 	public Schedule generateNewSchedule() {
 		
-		//Intitalize new schedule with company block Pool, which is neededShifts?????????
-		Schedule newSchedule = new Schedule();
+		Schedule newSchedule = new Schedule(this);
 		newSchedule.copyBlockPool(getMasterSchedule());
 		
 		//Initialize employee block pools

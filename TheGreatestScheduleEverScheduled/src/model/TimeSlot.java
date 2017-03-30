@@ -5,7 +5,6 @@ public class TimeSlot {
 	private int day;
 	private int start;
 	private int end;
-	//public String employeeType;
 	private boolean isManagerTimeSlot;
 	private Employee employee;
 	private int id;

@@ -1,9 +1,14 @@
 package model;
 
+import java.io.Serializable;
+
+import controller.Database;
+
+
 public class Employee implements Comparable<Employee> {
 	
 	private int empID;
-	private String fullName, fname, lname;
+	private String fullName, fname, lname, email="placeholder_email";
 	//private int prefHours; we could maybe add preferred hours to iteration 3?
 	   // for now I added a public final maxEmpHours into the schedule class
 	   // to make sure employees aren't scheduled > legal/organization limits for a week
@@ -14,28 +19,29 @@ public class Employee implements Comparable<Employee> {
 		return "employee";
 	}
 
-	public Employee(int id, String fname, String lname, String[] avail, boolean isManager){
+	public Employee(int id, String fname, String lname, String email, String[] avail, boolean isManager){
 		this.empID = id;
 		this.fullName = fname + " " + lname;
 		this.fname = fname;
 		this.lname = lname;
+		this.email = email;
 		this.availability = new Availability(avail, isManager);
 		this.isManager = isManager;
 		// TODO add new employee information into the appropriate database tables
 	}
-	
+
 	public int getID() {
 		return empID;
 	}
-	
+
 	public String getFirstName() {
 		return fname;
 	}
-	
+
 	public String getLastName() {
 		return lname;
 	}
-	
+
 	public String getFullName() {
 		return fullName;
 	}
@@ -59,5 +65,34 @@ public class Employee implements Comparable<Employee> {
 	public int compareTo(Employee o) {
 		return this.getID() - o.getID();
 	}
-	
+
+	// delete Employee from DB
+	public boolean delete() {
+		return Database.executeManipulateDataQuery(
+				String.format("DELETE FROM `%s`.`%s` WHERE `id`='%d'", Database.getName(), getTableName(), empID));
+	}
+
+	// save Employee into DB via insert or update
+	public boolean save() {
+		// UPDATE
+		if (Database.tableContainsID(getTableName(), empID)) {
+			return Database.executeManipulateDataQuery(String.format(
+					"UPDATE `%s`.`%s` SET `fname`='%s',`lname`='%s',`email`='%s',`business_id`=%d"
+							+ " WHERE `id`=%d",
+					Database.getName(), getTableName(), fname, lname, email, 0, empID));
+		}
+
+		// INSERT
+		int newID = Database.getNextIDForTable(getTableName());
+		if (newID < 0) {
+			// an error occurred while getting next ID
+			return false;
+		}
+
+		// 0 is placeholder for business_id for now, since there is no ID in business ATM
+		return Database.executeManipulateDataQuery(String.format(
+				"INSERT INTO `%s`.`%s` " + "(`id`, `fname`, `lname`, `email`, `business_id`)"
+						+ " VALUES ('%d', '%s', '%s', '%s', %d)",
+				Database.getName(), getTableName(), newID, fname, lname, email, 0));
+	}
 }

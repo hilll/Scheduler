@@ -116,7 +116,7 @@ public class LoginDummyAccount {
 			// Assign open availability all day
 			String fname = "worker" + i;
 			String lname = "Bee";
-			Employee e = new Employee(i, fname, lname, null, false);
+			Employee e = new Employee(i, fname, lname, "email", null, false);
 			staff.add(e);
 //			for(int j = 0; j < 7; j++){
 //				empSchedule.addTimeBlock(j, 0, 20, false, e);
@@ -128,7 +128,9 @@ public class LoginDummyAccount {
 			//Schedule empSchedule = new Schedule(account.getBusiness());
 			String fname = "manager" + k;
 			String lname = "Bee";
-			Employee e = new Employee(i, fname, lname, null, true);
+			Employee e = new Employee(i, fname, lname, "email", null, true);
+			//staff[i] = new Employee(i, name, 40, empSchedule);
+			
 //			for(int j = 0; j < 7; j++){
 //				empSchedule.addTimeBlock(j, 0, 20, true, e);
 //			}

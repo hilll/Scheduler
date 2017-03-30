@@ -2,33 +2,23 @@ package controller;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import model.Employee;
 
 /* the database is named "ccdb" which stands for cool cucumber database
- the tables that currently exist are:
- availability
-	emp_id INT
-    sunday, monday...saturday VARCHAR(96) but should always be 96chars
- employee
-    id INT
-    fname VARCHAR(45)
-    lname VARCHAR(45)
- login (this has 1 record for emp_id=1)
-    emp_id INT
-    username VARCHAR(45)
-    password VARCHAR(45)
     
  Example query: SELECT username FROM ccdb.login WHERE emp_id=1
  */
 public class Database {
 
 	public static String dbName = "ccdb";
-	
+
 	public static void main(String args[]) {
+		
 		// a little test to see how things work
-		ArrayList<String[]> data = executeSelectQuery("SELECT * FROM " + Employee.getTableName());
-		System.out.println("Data in employee table: ");
+		ArrayList<HashMap<String, String>> data = executeSelectQuery("SELECT * FROM " + Employee.getTableName());
+		/*System.out.println("Data in employee table: ");
 		printData(data);
 		System.out.println();
 
@@ -37,9 +27,9 @@ public class Database {
 		System.out.println();
 
 		// adding a new employee to the DB
-		Employee e = new Employee(getNextIDForTable(Employee.getTableName()), "Test", "Person", 0, null, null);
+		Employee e = new Employee(getNextIDForTable(Employee.getTableName()), "Test", "Person", "email", 0, null, null);
 		System.out.println("Inserting new Employee: " + e.getFullName());
-		insert(e);
+		e.save();
 		System.out.println("Data in employee table: ");
 		data = executeSelectQuery("SELECT * FROM " + Employee.getTableName());
 		printData(data);
@@ -47,7 +37,7 @@ public class Database {
 
 		// delete the employee, because we don't Test Person >:O!
 		System.out.println("Deleting " + e.getFullName() + "...");
-		delete(e);
+		e.delete();
 		System.out.println("Data in employee table: ");
 		data = executeSelectQuery("SELECT * FROM " + Employee.getTableName());
 		printData(data);
@@ -57,71 +47,56 @@ public class Database {
 		// myself (emp_id=1) for now
 		System.out.println("Availability test:");
 		data = executeSelectQuery("SELECT * FROM availability WHERE emp_id = 1");
-		printAvailability(data);
+		printData(data);*/
+		
+		// UPDATE test - id 0 already exists in DB
+		System.out.println("Update test:");
+		System.out.println("BEFORE:");
+		data = executeSelectQuery("SELECT * FROM employee WHERE id = 0");
+		printData(data);
+		Employee updateEmp = new Employee(0, "poop", "White", "pooping", 0, null, null);
+		updateEmp.save();
+		System.out.println("AFTER:");
+		data = executeSelectQuery("SELECT * FROM employee WHERE id = 0");
+		printData(data);
+		Employee resetEmp = new Employee(0, "Sarina", "White", "sarinarw@email.arizona.edu", 0, null, null);
+		resetEmp.save();
 	}
 
 	// * can be used to print the returned DB data from executeSelectQuery()
 	// * mainly for testing - making sure your SELECT query is getting the right
 	// output
-	public static void printData(ArrayList<String[]> data) {
-		for (String[] record : data) {
-			for (String attribute : record) {
-				System.out.print(attribute + " ");
+	public static void printData(ArrayList<HashMap<String, String>> data) {
+		for (HashMap<String, String> record : data) {
+			for (String key : record.keySet()) {
+				System.out.println(key + ":" + record.get(key));
 			}
-			System.out.println();
+			System.out.println(); // extra newline between records
 		}
 	}
 
-	// more specific for availability because of the very long 01010101 strings
-	// and it looks super horrible (unreadable) as a single line
-	public static void printAvailability(ArrayList<String[]> data) {
-		for (String[] record : data) {
-			System.out.println("emp_id: " + record[0]);
-			System.out.println("sunday:    " + record[1]);
-			System.out.println("monday:    " + record[2]);
-			System.out.println("tuesday:   " + record[3]);
-			System.out.println("wednesday: " + record[4]);
-			System.out.println("thursday:  " + record[5]);
-			System.out.println("friday:    " + record[6]);
-			System.out.println("sunday:    " + record[7]);
-			System.out.println("each availability string has length: " + record[1].length());
-		}
+	public static String getName() {
+		return dbName;
 	}
 
-	// inserting an employee
-	public static boolean insert(Employee e) {
-		int newID = getNextIDForTable(Employee.getTableName());
-		if (newID < 0) {
-			// an error occurred while getting next ID
-			return false;
-		}
-		return executeManipulateDataQuery(
-				String.format("INSERT INTO `%s`.`%s`" + "(`id`, `fname`, `lname`) VALUES ('%d', '%s', '%s')", dbName,
-						Employee.getTableName(), newID, e.getFirstName(), e.getLastName()));
-	}
-
-	public static boolean delete(Employee e) {
-		return executeManipulateDataQuery(
-				String.format("DELETE FROM `%s`.`%s` WHERE `id`='%d'", dbName, Employee.getTableName(), e.getID()));
-	}
-
-	private static int getNextIDForTable(String tableName) {
-		ArrayList<String[]> data = executeSelectQuery(String.format("SELECT MAX(id) FROM %s", tableName));
+	// get the next id PK to use for a new insert into DB table
+	public static int getNextIDForTable(String tableName) {
+		ArrayList<HashMap<String, String>> data = executeSelectQuery(
+				String.format("SELECT MAX(id) FROM %s", tableName));
 		if (data == null) {
 			return -1; // some error occurred during the query
 		}
 		if (data.isEmpty()) {
 			return 0; // there were no other records in the table
 		}
-		// get the first value of the first record returned
-		// (which is the MAX id currently in the table)
-		// and add 1 to get next new ID
-		return Integer.parseInt(data.get(0)[0]) + 1;
+		// get the max id from first (and only) record returned
+		// then add 1 to make new id
+		return Integer.parseInt(data.get(0).get("MAX(id)")) + 1;
 	}
 
 	// returns if/if not a successful execution
 	// use this for UPDATE/INSERT/DELETE
-	private static boolean executeManipulateDataQuery(String query) {
+	public static boolean executeManipulateDataQuery(String query) {
 		Connection con = getConnection();
 		boolean success = false;
 		try {
@@ -129,6 +104,7 @@ public class Database {
 			success = statement.execute(query);
 			con.close();
 		} catch (SQLException e) {
+			System.err.println("SQLException with query: " + query);
 			e.printStackTrace();
 		}
 		return success;
@@ -136,26 +112,29 @@ public class Database {
 
 	// Use only for SELECTs
 	// Converts ResultSet to a consistently accessible ArrayList<String[]>
-	private static ArrayList<String[]> executeSelectQuery(String query) {
+	public static ArrayList<HashMap<String, String>> executeSelectQuery(String query) {
 		Connection con = getConnection();
 		try {
 			Statement statement = con.createStatement();
 			ResultSet rs = statement.executeQuery(query);
 			ResultSetMetaData metadata = rs.getMetaData();
-			ArrayList<String[]> data = new ArrayList<>();
+			ArrayList<HashMap<String, String>> data = new ArrayList<>();
+
 			// save all the records into the arraylist
+			// each record is a mapping from attribute name => value
 			while (rs.next()) {
-				String[] record = new String[metadata.getColumnCount()];
+				HashMap<String, String> record = new HashMap<>();
 				for (int i = 1; i <= metadata.getColumnCount(); i++) {
-					record[i - 1] = rs.getString(i);
+					record.put(metadata.getColumnName(i), rs.getString(i));
 				}
 				data.add(record);
 			}
 			con.close();
 			return data;
 		} catch (SQLException e) {
+			System.err.println("SQLException with query: " + query);
 			e.printStackTrace();
-			return null;
+			return null; // oh no!
 		}
 	}
 
@@ -169,5 +148,15 @@ public class Database {
 			e.printStackTrace();
 		}
 		return con;
+	}
+
+	// check if a certain table already contains an id (check for if you want to UPDATE or INSERT)
+	public static boolean tableContainsID(String tableName, int id) {
+		ArrayList<HashMap<String, String>> res = executeSelectQuery(
+				String.format("SELECT * FROM `%s`.`%s` WHERE id = %d", Database.getName(), tableName, id));
+		if (res.isEmpty()) {
+			return false;
+		}
+		return true;
 	}
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import model.Employee;
+import model.Schedule;
 
 /* the database is named "ccdb" which stands for cool cucumber database
     
@@ -18,7 +19,7 @@ public class Database {
 		
 		// a little test to see how things work
 		ArrayList<HashMap<String, String>> data = executeSelectQuery("SELECT * FROM " + Employee.getTableName());
-		/*System.out.println("Data in employee table: ");
+		System.out.println("Data in employee table: ");
 		printData(data);
 		System.out.println();
 
@@ -27,7 +28,7 @@ public class Database {
 		System.out.println();
 
 		// adding a new employee to the DB
-		Employee e = new Employee(getNextIDForTable(Employee.getTableName()), "Test", "Person", "email", 0, null, null);
+		Employee e = new Employee(getNextIDForTable(Employee.getTableName()), "Test", "Person", "email", null, false);
 		System.out.println("Inserting new Employee: " + e.getFullName());
 		e.save();
 		System.out.println("Data in employee table: ");
@@ -47,19 +48,19 @@ public class Database {
 		// myself (emp_id=1) for now
 		System.out.println("Availability test:");
 		data = executeSelectQuery("SELECT * FROM availability WHERE emp_id = 1");
-		printData(data);*/
+		printData(data);
 		
 		// UPDATE test - id 0 already exists in DB
 		System.out.println("Update test:");
 		System.out.println("BEFORE:");
 		data = executeSelectQuery("SELECT * FROM employee WHERE id = 0");
 		printData(data);
-		Employee updateEmp = new Employee(0, "poop", "White", "pooping", 0, null, null);
+		Employee updateEmp = new Employee(0, "poop", "White", "pooping", null, false);
 		updateEmp.save();
 		System.out.println("AFTER:");
 		data = executeSelectQuery("SELECT * FROM employee WHERE id = 0");
 		printData(data);
-		Employee resetEmp = new Employee(0, "Sarina", "White", "sarinarw@email.arizona.edu", 0, null, null);
+		Employee resetEmp = new Employee(0, "Sarina", "White", "sarinarw@email.arizona.edu", null, false);
 		resetEmp.save();
 	}
 

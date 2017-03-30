@@ -1,6 +1,7 @@
 package test;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import model.*;
@@ -15,11 +16,8 @@ public class LoginDummyAccount {
 		//saveNewDummyAccount();
 		
 		Account account = new Account();
-		account.LoadAccount();
 		
 		startUserInterface(account);
-		
-		
 	}
 
 	private static void startUserInterface(Account account) {
@@ -63,9 +61,9 @@ public class LoginDummyAccount {
 				displaySchedule = account.getCurrentSchedule();
 				break;
 			case 2: // Create Shift, day=0, start=8, end=17, type=worker
-				int day = 0; int start = 8; int end = 17; String type = "worker";
-				System.out.printf("Creating Shift day=%s start=%d end=%d type=%s\n", day, start, end, type);
-				account.createShift(day, start, end, type);	//creates shift id=21
+				int day = 0; int start = 8; int end = 17; boolean isManager = false;
+				System.out.printf("Creating Shift day=%s start=%d end=%d type=%b\n", day, start, end, isManager);
+				account.createShift(day, start, end, isManager);	//creates shift id=21
 				displaySchedule = account.getMasterSchedule();
 				
 				break;
@@ -97,12 +95,12 @@ public class LoginDummyAccount {
 		Account account = new Account();
 		Business business = new Business();
 		
-		/* DUmmy Company Scedule, 2 10 hour shifts a day, 7 day of the week */
+		// DUmmy Company Scedule, 2 10 hour shifts a day, 7 day of the week
 		Schedule businessSchedule = new Schedule();
 		for(int i = 0; i < 7; i++){
-			businessSchedule.addTimeBlock(i, 0, 10, "worker", null);
-			businessSchedule.addTimeBlock(i, 10, 20, "worker", null);
-			businessSchedule.addTimeBlock(i, 0, 20, "manager", null);
+			businessSchedule.addTimeBlock(i, 0, 10, false, null);
+			businessSchedule.addTimeBlock(i, 10, 20, false, null);
+			businessSchedule.addTimeBlock(i, 0, 20, false, null);
 		}
 		
 		
@@ -110,33 +108,38 @@ public class LoginDummyAccount {
 		businessSchedule.fillCompanyPool();
 		
 		//Add master schedule
-		business.masterSchedule=businessSchedule;
+		business.setMasterSchedule(businessSchedule);
 		
 		
-		/* Intialize Dummy Employee workers*/
-		Employee[]	staff = new Employee[12];
+		// Intialize Dummy Employee workers
+		ArrayList<Employee> staff = new ArrayList<Employee>();
 		int i;
 		for( i = 0; i < 10; ++i){
 			// Assign open availability all day
 			Schedule empSchedule = new Schedule();
-			String name = "worker" + i ;
-			staff[i] = new Employee(i, name, 40, empSchedule);
+			String fname = "worker" + i ;
+			String lname = "Bee";
+			//staff[i] = new Employee(i, name, 40, empSchedule);
+			Employee e = new Employee(i, fname, lname, null, false);
+			staff.add(e);
 			for(int j = 0; j < 7; j++){
-				empSchedule.addTimeBlock(j, 0, 20, "worker", staff[i]);
+				empSchedule.addTimeBlock(j, 0, 20, false, e);
 			}
 
 			
 			
 		}
-		/* Intialize Dummy Employee workers*/
-		for( int k = 0; i < 12; ++i){
+		// Intialize Dummy Employee workers
+		for( int k = 0; k < 12; ++k){
 			// Assign open availability all day
 			Schedule empSchedule = new Schedule();
-			String name = "manager" + k ;
+			String fname = "manager" + k;
+			String lname = "Bee";
+			Employee e = new Employee(i, fname, lname, null, true);
+			//staff[i] = new Employee(i, name, 40, empSchedule);
 			
-			staff[i] = new Employee(i, name, 40, empSchedule);
 			for(int j = 0; j < 7; j++){
-				empSchedule.addTimeBlock(j, 0, 20, "manager", staff[i]);
+				empSchedule.addTimeBlock(j, 0, 20, true, e);
 			}
 			//name increament
 			k++;
@@ -144,17 +147,16 @@ public class LoginDummyAccount {
 		}
 		
 		//Finish initializing dummy business
-		business.staff = staff;
+		business.setStaff(staff);
 		business.generateNewSchedule();
 		
 		//Initialize account
-		staff[10].business = business;
-		account.employee = staff[10];
+		//staff[10].business = business;
+		//account.employee = staff[10];
 		
-		account.SaveAccount(account);
+		//account.SaveAccount(account);
 		
 		
 	}
-	
 
 }

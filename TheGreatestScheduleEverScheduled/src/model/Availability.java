@@ -4,7 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+import controller.Database;
+
 public class Availability {
+	
+	public static String getTableName() {
+		return "availability";
+	}
 
 	// forgive the ugliness. When a new employee is created, its availability is auto-set to this to start with
 	private final String[] starterAvailability = { "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
@@ -98,25 +104,45 @@ public class Availability {
 		}
 	}
 	
-	public void addUnavailability(int day, int start, int end) {
+	/*
+	 * should only be called from fillPools method - does not update availabilityStrings
+	 */
+	private void addUnavailability(int day, int start, int end) {
 		TimeSlot slot = new TimeSlot(-1, day, start, end, isManager);
 		unavailabilityList.add(slot);
 	}
 	
-	public void removeUnavailability(int day, int start, int end) {
-		for (TimeSlot ts : unavailabilityList) {
-			if (ts.getDay() == day) {
-				if (ts.getStart() == start) {
-					if (ts.getEnd() == end) {
-						unavailabilityList.remove(ts);
-						return;
-					}
-				}
-			}
+//	private void removeUnavailability(int day, int start, int end) {
+//		for (TimeSlot ts : unavailabilityList) {
+//			if (ts.getDay() == day) {
+//				if (ts.getStart() == start) {
+//					if (ts.getEnd() == end) {
+//						unavailabilityList.remove(ts);
+//						return;
+//					}
+//				}
+//			}
+//		}
+//	}
+	
+	/*
+	 * returns false if there was an input error
+	 */
+	public boolean updateAvailabilityStrings(int day, int start, int end, char availability) {
+		if (end < start)
+			return false;
+		char[] changeThis = availabilityStrings[day].toCharArray();
+		for (int i = start; i <= end; i++) {
+			changeThis[i] = availability;
 		}
+		availabilityStrings[day] = String.valueOf(changeThis);
+		return true;
 	}
 	
-	public void addAvailability(int day, int start, int end) {
+	/*
+	 * should only be called from fillPools method - does not update availabilityStrings
+	 */
+	private void addAvailability(int day, int start, int end) {
 		TimeSlot slot = new TimeSlot(-1, day, start, end, isManager);
 		this.availabilityByDay.get(day).add(slot);
 	}
@@ -179,5 +205,39 @@ public class Availability {
 	
 	public ArrayList<TimeSlot> getUnavailabilityList() {
 		return unavailabilityList;
+	}
+
+	// delete Availability from DB
+	public boolean delete(int empID) {
+		return Database.executeManipulateDataQuery(
+				String.format("DELETE FROM `%s`.`%s` WHERE `emp_id`='%d'", Database.getName(), getTableName(), empID));
+	}
+
+	// save Employee into DB via insert or update
+	public boolean save(int empID) {
+		// UPDATE
+		if (Database.tableContainsID(getTableName(), empID)) {
+			return Database.executeManipulateDataQuery(String.format(
+					"UPDATE `%s`.`%s` SET `sunday`='%s',`monday`='%s',`tuesday`='%s',`wednesday`='%s',`thursday`='%s',`friday`='%s',`saturday`='%s'" + " WHERE `emp_id`=%d",
+					Database.getName(), getTableName(), availabilityStrings[0], availabilityStrings[1], availabilityStrings[2], availabilityStrings[3],
+					availabilityStrings[4], availabilityStrings[5], availabilityStrings[6], empID));
+		}
+
+		// 0 is placeholder for business_id for now, since there is no ID in
+		// business ATM
+		return Database.executeManipulateDataQuery(String.format(
+				"INSERT INTO `%s`.`%s` " + "(`emp_id`, `sunday`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`)"
+						+ " VALUES ('%d', '%s', '%s', '%s', '%s', '%s', '%s')",
+						Database.getName(), getTableName(), empID, availabilityStrings[0], availabilityStrings[1], availabilityStrings[2], availabilityStrings[3],
+						availabilityStrings[4], availabilityStrings[5], availabilityStrings[6]));
+	}
+	
+	public String toString() {
+		String result = availabilityStrings[0];
+		for (int i = 1; i < 7; i++) {
+			result = result + "\n" + availabilityStrings[i];
+		}
+		result.trim();
+		return result;
 	}
 }

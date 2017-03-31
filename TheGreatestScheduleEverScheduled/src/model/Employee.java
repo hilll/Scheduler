@@ -29,8 +29,47 @@ public class Employee implements Comparable<Employee> {
 			return -1;
 		return Integer.parseInt(res.get(0).get("emp_id"));
 	}
+	
+	/*
+	 * returns null if the employee does not exist in the database, otherwise,
+	 * returns the Employee object with filled data fields.
+	 */
+	public static Employee loadFromID(int id) {
+		String query = "SELECT * FROM " + getTableName() + " WHERE id=" + id;
+		ArrayList<HashMap<String, String>> result = Database.executeSelectQuery(query);
+		if (result.size() == 0)
+			return null;
+		HashMap<String, String> hm = result.get(0);
+		String availQuery = "SELECT * FROM " + Availability.getTableName() + " WHERE emp_id=" + id; 
+		ArrayList<HashMap<String, String>> aresult = Database.executeSelectQuery(availQuery);
+		HashMap<String, String> am = aresult.get(0);
+		String[] avail = new String[7];
+		avail[0] = am.get("sunday");
+		avail[1] = am.get("monday");
+		avail[2] = am.get("tuesday");
+		avail[3] = am.get("wednesday");
+		avail[4] = am.get("thursday");
+		avail[5] = am.get("friday");
+		avail[6] = am.get("saturday");
+		boolean isManager;
+		if (hm.get("is_manager").equals("1"))
+			isManager = true;
+		else
+			isManager = false;
+		Employee loaded = new Employee(Integer.parseInt(hm.get("id")), hm.get("fname"), hm.get("lname"), hm.get("email"), avail, isManager);
+		return loaded;
+	}
 
+	/*
+	 * If you are creating a brand new employee, use -1 for id. 
+	 */
 	public Employee(int id, String fname, String lname, String email, String[] avail, boolean isManager) {
+		if (id == -1) {
+			id = Database.getNextIDForTable(getTableName()); 
+			if (id < 0) { 
+				System.out.println("an error occurred while getting next ID return false");
+			}
+		}
 		this.empID = id;
 		this.fullName = fname + " " + lname;
 		this.fname = fname;
@@ -38,8 +77,10 @@ public class Employee implements Comparable<Employee> {
 		this.email = email;
 		this.availability = new Availability(avail, isManager);
 		this.isManager = isManager;
-		// TODO add new employee information into the appropriate database
-		// tables
+	}
+	
+	public Employee(int id) {
+		this.empID = id;
 	}
 
 	public int getID() {
@@ -80,6 +121,7 @@ public class Employee implements Comparable<Employee> {
 
 	// delete Employee from DB
 	public boolean delete() {
+		this.getAvailability().delete(this.getID());
 		return Database.executeManipulateDataQuery(
 				String.format("DELETE FROM `%s`.`%s` WHERE `id`='%d'", Database.getName(), getTableName(), empID));
 	}
@@ -94,7 +136,6 @@ public class Employee implements Comparable<Employee> {
 					Database.getName(), getTableName(), fname, lname, email, 0, empID, isManager ? 1 : 0));
 		}
 
-		// INSERT
 		/*
 		 * int newID = Database.getNextIDForTable(getTableName()); if (newID <
 		 * 0) { // an error occurred while getting next ID return false; }

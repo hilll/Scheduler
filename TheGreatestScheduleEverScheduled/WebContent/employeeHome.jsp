@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>The Greatest Schedule Ever Scheduled</title>
 <link rel="stylesheet" type="text/css" href="style.css">
+<%@ page import="model.Employee" %>
 </head>
 <body>
 
@@ -17,6 +18,9 @@
 </div>
 <br/>
 <div class="main">
+<%  %>
+
+
 </div>
 
 

@@ -142,10 +142,12 @@ public class Database {
 	private static Connection getConnection() {
 		Connection con = null;
 		try {
+			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection(
 					"jdbc:mysql://ccdbinstance.cu5co55mqa04.us-west-2.rds.amazonaws.com:3306/ccdb", "username",
 					"password");
 		} catch (Exception e) {
+			System.err.println("Connection with DB could not be established");
 			e.printStackTrace();
 		}
 		return con;

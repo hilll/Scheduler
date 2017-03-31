@@ -28,10 +28,16 @@ public class TimeSlot {
 		return false;
 	}
 	
-	public boolean isEqual(TimeSlot that){
+	public boolean isEqualByID(TimeSlot that){
 		if(this.id == that.id){
 			return true;
 		}
+		return false;
+	}
+	
+	public boolean isEqualByDayAndTimes(TimeSlot that) {
+		if (this.getDay() == that.getDay() && this.getStart() == that.getStart() && this.getEnd() == that.getEnd())
+			return true;
 		return false;
 	}
 	

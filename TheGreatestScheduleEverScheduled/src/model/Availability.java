@@ -132,13 +132,10 @@ public class Availability {
 	 */
 	public boolean removeUnavailability(TimeSlot slot) {
 		for (TimeSlot ts : unavailabilityList) {
-			if (ts.getDay() == slot.getDay()) {
-				if (ts.getStart() == slot.getStart()) {
-					if (ts.getEnd() == slot.getEnd()) {
-						unavailabilityList.remove(ts);
-						return true;
-					}
-				}
+			if (ts.isEqualByDayAndTimes(slot)) {
+				unavailabilityList.remove(ts);
+				updateAvailabilityStrings(ts.getDay(), ts.getStart(), ts.getEnd(), '1');
+				return true;
 			}
 		}
 		return false;
@@ -172,9 +169,9 @@ public class Availability {
 		Collections.shuffle(this.availabilityPool, new Random(seed));
 	}
 	
-	public TimeSlot getTimeBlock(TimeSlot slot){
+	public TimeSlot getAvailabilityBlock(TimeSlot slot){
 		for(TimeSlot block : this.availabilityPool){
-			if(block.isEqual(slot)){
+			if(block.isEqualByDayAndTimes(slot)){
 				return block;
 			}
 		}
@@ -192,6 +189,7 @@ public class Availability {
 				for(TimeSlot thatSlot : company.getShiftsByDay().get(day)){	//time blocks that has
 					if(thisSlot.canFit(thatSlot)){
 						this.availabilityPool.add(thatSlot);		//Put shift in emp pool
+						continue; // don't add the same availability slot twice
 					}
 				}
 			}

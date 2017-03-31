@@ -74,7 +74,7 @@ public class Schedule {
 	
 	public TimeSlot getTimeBlock(TimeSlot slot){
 		for(TimeSlot block : this.allShiftsPool){
-			if(block.isEqual(slot)){
+			if(block.isEqualByID(slot)){
 				return block;
 			}
 		}

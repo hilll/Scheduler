@@ -5,13 +5,22 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>The Greatest Schedule Ever Scheduled</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
+	<%@ page import="model.Employee" %>
+<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
-	<form method="post" action="login">
-		<input type="text" name="username"><br>
-		<input type="password" name = "password"><br>
-		<input type="submit" value ="submit">
-	</form>
+	<div class="navbar">
+		<h1 style="margin-left: auto; margin-right: auto;">The Greatest Schedule Ever Scheduled <h1><br>
+		<a href="employeeHome.jsp">Home</a>
+		<a href="updateAvailability.jsp">Change Availability</a>
+	</div>
+	<div class="login">
+		<%= Employee.getIDForLogin("rkaye" , "rkaye") %>
+		<form method="post" action="login">
+			<input type="text" name="username"><br>
+			<input type="password" name = "password"><br>
+			<input type="submit" value ="submit">
+		</form>
+	</div>
 </body>

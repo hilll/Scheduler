@@ -11,6 +11,11 @@ public class Driver {
 		//} else {
 		//	System.out.println("Returned false.");
 		//}
-		Employee.loadFromID(6);
+		Employee emp = Employee.loadFromID(12);
+		System.out.println("id = " + emp.getID());
+		System.out.println("name = " + emp.getFullName());
+		System.out.println("Availability = ");
+		System.out.println(emp.getAvailability().toString());
+		emp.delete();
 	}
 }

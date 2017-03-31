@@ -28,6 +28,25 @@ public class Employee implements Comparable<Employee> {
 			return -1;
 		return Integer.parseInt(res.get(0).get("emp_id"));
 	}
+	
+	public static void loadFromID(int id) {
+		String query = "SELECT * FROM " + getTableName() + " WHERE id=" + id;
+		ArrayList<HashMap<String, String>> result = Database.executeSelectQuery(query);
+		HashMap<String, String> hm = result.get(0);
+		System.out.println("key:value");
+		for (String key : hm.keySet()) {
+			System.out.println(key + ":" + hm.get(key));
+		}
+		String availQuery = "SELECT * FROM " + Availability.getTableName() + " WHERE emp_id=" + id; 
+		ArrayList<HashMap<String, String>> aresult = Database.executeSelectQuery(availQuery);
+		HashMap<String, String> am = aresult.get(0);
+		System.out.println("key:value");
+		for (String key : am.keySet()) {
+			System.out.println(key + ":" + am.get(key));
+		}
+		//String[] avail = new String[7];
+		//Employee loaded = new Employee(Integer.parseInt(hm.get("id")), hm.get("fname"), hm.get("lname"), hm.get("email"), null, false);
+	}
 
 	public Employee(int id, String fname, String lname, String email, String[] avail, boolean isManager) {
 		this.empID = id;
@@ -37,8 +56,10 @@ public class Employee implements Comparable<Employee> {
 		this.email = email;
 		this.availability = new Availability(avail, isManager);
 		this.isManager = isManager;
-		// TODO add new employee information into the appropriate database
-		// tables
+	}
+	
+	public Employee(int id) {
+		this.empID = id;
 	}
 
 	public int getID() {
@@ -79,6 +100,7 @@ public class Employee implements Comparable<Employee> {
 
 	// delete Employee from DB
 	public boolean delete() {
+		this.getAvailability().delete(this.getID());
 		return Database.executeManipulateDataQuery(
 				String.format("DELETE FROM `%s`.`%s` WHERE `id`='%d'", Database.getName(), getTableName(), empID));
 	}
@@ -96,6 +118,7 @@ public class Employee implements Comparable<Employee> {
 		int newID = Database.getNextIDForTable(getTableName());
 		if (newID < 0) {
 			// an error occurred while getting next ID
+			System.out.println("newid");
 			return false;
 		}
 

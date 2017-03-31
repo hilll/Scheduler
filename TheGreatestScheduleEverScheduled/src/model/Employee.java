@@ -128,6 +128,8 @@ public class Employee implements Comparable<Employee> {
 
 	// save Employee into DB via insert or update
 	public boolean save() {
+		this.getAvailability().save(empID);
+		
 		// UPDATE
 		if (Database.tableContainsID(getTableName(), empID)) {
 			return Database.executeManipulateDataQuery(String.format(

@@ -25,7 +25,7 @@ public class LoginController extends HttpServlet{
 				setLoginFailed("Login Failed");
 			}else{
 				setLoginFailed("");
-				Employee.setLoggedIn(id);
+				//Employee.setLoggedIn(id);
 				//out.printf(" got employee ID:%d\n", id);
 			}
 //			out.println("Got username: " + username);

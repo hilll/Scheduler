@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import model.Availability;
 import model.Employee;
 import model.Schedule;
 
@@ -155,8 +156,14 @@ public class Database {
 
 	// check if a certain table already contains an id (check for if you want to UPDATE or INSERT)
 	public static boolean tableContainsID(String tableName, int id) {
-		ArrayList<HashMap<String, String>> res = executeSelectQuery(
-				String.format("SELECT * FROM `%s`.`%s` WHERE id = %d", Database.getName(), tableName, id));
+		ArrayList<HashMap<String, String>> res;
+		if (tableName.equals(Availability.getTableName())) {
+			res = executeSelectQuery(
+					String.format("SELECT * FROM `%s`.`%s` WHERE emp_id = %d", Database.getName(), tableName, id));
+		} else {
+			res = executeSelectQuery(
+					String.format("SELECT * FROM `%s`.`%s` WHERE id = %d", Database.getName(), tableName, id));
+		}
 		if (res.isEmpty()) {
 			return false;
 		}

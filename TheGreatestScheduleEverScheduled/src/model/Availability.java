@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Random;
 
 import controller.Database;
@@ -83,9 +84,12 @@ public class Availability {
 						unavailableStart = 0;
 					} else { // not the beginning of string
 						availableEnd = c - 1;
+						unavailableStart = c;
 						if (availableEnd - availableStart >= MIN_SHIFT_LENGTH) {
 							addAvailability(day, availableStart, availableEnd);
 						}
+						availableStart = -1;
+						availableEnd = -1;
 					}
 				}
 				streakType = curr;
@@ -112,18 +116,33 @@ public class Availability {
 		unavailabilityList.add(slot);
 	}
 	
-//	private void removeUnavailability(int day, int start, int end) {
-//		for (TimeSlot ts : unavailabilityList) {
-//			if (ts.getDay() == day) {
-//				if (ts.getStart() == start) {
-//					if (ts.getEnd() == end) {
-//						unavailabilityList.remove(ts);
-//						return;
-//					}
-//				}
-//			}
-//		}
-//	}
+	/*
+	 * returns a hashmap with keys being timeslot toStrings and values being the timeslot itself
+	 */
+	public HashMap<String, TimeSlot> getUnavailabilitySlots() {
+		HashMap<String, TimeSlot> slots = new HashMap<String, TimeSlot>();
+		for (TimeSlot ts : unavailabilityList) {
+			slots.put(ts.toString(), ts);
+		}
+		return slots;
+	}
+	
+	/*
+	 * returns true is TimeSlot was successfully removed, false if it wasn't found
+	 */
+	public boolean removeUnavailability(TimeSlot slot) {
+		for (TimeSlot ts : unavailabilityList) {
+			if (ts.getDay() == slot.getDay()) {
+				if (ts.getStart() == slot.getStart()) {
+					if (ts.getEnd() == slot.getEnd()) {
+						unavailabilityList.remove(ts);
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
 	
 	/*
 	 * returns false if there was an input error
@@ -145,22 +164,6 @@ public class Availability {
 	private void addAvailability(int day, int start, int end) {
 		TimeSlot slot = new TimeSlot(-1, day, start, end, isManager);
 		this.availabilityByDay.get(day).add(slot);
-	}
-	
-	/*
-	 * returns true if the TimeBlock with slotID is successfully removed, false if it 
-	 * did not exist.
-	 */
-	public boolean removeTimeBlock(int slotID){
-		for(int day = 0; day < 7; day++){
-			for(int i = 0 ; i < this.availabilityByDay.get(day).size(); i++){
-				if(this.availabilityByDay.get(day).get(i).getID() == slotID){
-					this.availabilityByDay.get(day).remove(i);
-					return true;
-				}
-			}
-		}
-		return false;		
 	}
 
 	public void setSchedulePrefrences(){

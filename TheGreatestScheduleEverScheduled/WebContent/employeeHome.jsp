@@ -18,8 +18,8 @@
 </div>
 <br/>
 <div class="main">
-<%  %>
-
+	<% int loggedIn = Employee.getLoggedIn(); %>
+	<%= "loggedIn employee ID: " + Employee.getLoggedIn() %>
 
 </div>
 

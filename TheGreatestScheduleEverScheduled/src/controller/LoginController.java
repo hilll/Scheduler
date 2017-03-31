@@ -11,7 +11,7 @@ import model.*;
 
 public class LoginController extends HttpServlet{
 	
-	String loginFailed = "";
+	private static String loginFailed = "";
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -19,18 +19,26 @@ public class LoginController extends HttpServlet{
 			String password = (String) request.getParameter("password");
 			
 			int id = Employee.getIDForLogin(username, password);
-			PrintWriter out = response.getWriter();
 			
 			if(id < 0 ){
-				out.println("Login Failed");
-				loginFailed = "Login Failed";
+//				out.println("Login Failed");
+				setLoginFailed("Login Failed");
 			}else{
-				loginFailed = "";
-				out.printf(" got employee ID:%d\n", id);
+				setLoginFailed("");
+				Employee.setLoggedIn(id);
+				//out.printf(" got employee ID:%d\n", id);
 			}
-			out.println("Got username: " + username);
-			out.println("Got password: " + password);
+//			out.println("Got username: " + username);
+//			out.println("Got password: " + password);
 
+	}
+
+	public static String getLoginFailed() {
+		return loginFailed;
+	}
+
+	public static void setLoginFailed(String loginFailedMessage) {
+		loginFailed = loginFailedMessage;
 	}
 
 }

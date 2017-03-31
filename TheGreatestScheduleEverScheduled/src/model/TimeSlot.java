@@ -10,6 +10,9 @@ public class TimeSlot {
 	private int id;
 	
 	public TimeSlot(int id, int day, int start, int end, boolean isManagerTimeSlot) {
+		if (start < 0 || end >= 96) {
+			System.out.println("Indexes are out of bounds for start or end. must be 0-95");
+		}
 		this.day = day;
 		this.start=start;
 		this.end = end;
@@ -79,9 +82,7 @@ public class TimeSlot {
 			result += "30";
 		else if (minutes == 3)
 			result += "45";
-		if (time == 96)
-			result += "AM";
-		else if (hours < 12)
+		if (hours < 12)
 			result += "AM";
 		else
 			result += "PM";

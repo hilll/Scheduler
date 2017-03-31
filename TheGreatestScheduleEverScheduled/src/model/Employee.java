@@ -7,6 +7,7 @@ import java.util.HashMap;
 import controller.Database;
 
 public class Employee implements Comparable<Employee> {
+	private Employee loggedIn;
 
 	private int empID;
 	private String fullName, fname, lname, email = "placeholder_email";
@@ -105,6 +106,14 @@ public class Employee implements Comparable<Employee> {
 				"INSERT INTO `%s`.`%s` " + "(`id`, `fname`, `lname`, `email`, `business_id`)"
 						+ " VALUES ('%d', '%s', '%s', '%s', %d)",
 				Database.getName(), getTableName(), newID, fname, lname, email, 0));
+	}
+
+	public Employee getLoggedIn() {
+		return loggedIn;
+	}
+
+	public void setLoggedIn(Employee loggedIn) {
+		this.loggedIn = loggedIn;
 	}
 
 	

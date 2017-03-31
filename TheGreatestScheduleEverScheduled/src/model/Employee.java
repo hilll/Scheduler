@@ -21,7 +21,7 @@ public class Employee implements Comparable<Employee> {
 	public static String getTableName() {
 		return "employee";
 	}
-	
+
 	public static int getIDForLogin(String username, String password) {
 		ArrayList<HashMap<String, String>> res = Database.executeSelectQuery(
 				String.format("SELECT emp_id FROM login WHERE username='%s' AND password='%s'", username, password));
@@ -89,23 +89,24 @@ public class Employee implements Comparable<Employee> {
 		// UPDATE
 		if (Database.tableContainsID(getTableName(), empID)) {
 			return Database.executeManipulateDataQuery(String.format(
-					"UPDATE `%s`.`%s` SET `fname`='%s',`lname`='%s',`email`='%s',`business_id`=%d" + " WHERE `id`=%d",
-					Database.getName(), getTableName(), fname, lname, email, 0, empID));
+					"UPDATE `%s`.`%s` SET `fname`='%s',`lname`='%s',`email`='%s',`business_id`=%d,`is_manager`=%d"
+							+ " WHERE `id`=%d",
+					Database.getName(), getTableName(), fname, lname, email, 0, empID, isManager ? 1 : 0));
 		}
 
 		// INSERT
-		int newID = Database.getNextIDForTable(getTableName());
-		if (newID < 0) {
-			// an error occurred while getting next ID
-			return false;
-		}
+		/*
+		 * int newID = Database.getNextIDForTable(getTableName()); if (newID <
+		 * 0) { // an error occurred while getting next ID return false; }
+		 */ // THE NEW ID SHOULD ACTUALLY BE ADDED DURING EMPLOYEE CREATION, NOT
+			// SAVING
 
 		// 0 is placeholder for business_id for now, since there is no ID in
 		// business ATM
 		return Database.executeManipulateDataQuery(String.format(
-				"INSERT INTO `%s`.`%s` " + "(`id`, `fname`, `lname`, `email`, `business_id`)"
-						+ " VALUES ('%d', '%s', '%s', '%s', %d)",
-				Database.getName(), getTableName(), newID, fname, lname, email, 0));
+				"INSERT INTO `%s`.`%s` " + "(`id`, `fname`, `lname`, `email`, `business_id`, `is_manager`)"
+						+ " VALUES ('%d', '%s', '%s', '%s', %d, %d)",
+				Database.getName(), getTableName(), empID, fname, lname, email, 0, isManager ? 1 : 0));
 	}
 
 	public static Employee getLoggedIn() {
@@ -116,5 +117,4 @@ public class Employee implements Comparable<Employee> {
 		loggedIn = loggingIn;
 	}
 
-	
 }

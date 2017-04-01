@@ -23,6 +23,11 @@ public class Database {
 		System.out.println("Data in employee table: ");
 		printData(data);
 		System.out.println();
+		
+		ArrayList<HashMap<String, String>> availData = executeSelectQuery("SELECT * FROM " + Availability.getTableName());
+		System.out.println("Data in availability table: ");
+		printData(availData);
+		System.out.println();
 
 		// to get the next ID to use for some table
 		System.out.println("Next new employee will have ID of: " + getNextIDForTable(Employee.getTableName()));
@@ -32,17 +37,29 @@ public class Database {
 		Employee e = new Employee(getNextIDForTable(Employee.getTableName()), "Test", "Person", "email", null, false);
 		System.out.println("Inserting new Employee: " + e.getFullName());
 		e.save();
+		
 		System.out.println("Data in employee table: ");
 		data = executeSelectQuery("SELECT * FROM " + Employee.getTableName());
 		printData(data);
+		System.out.println();
+		
+		ArrayList<HashMap<String, String>> availDataAfterTestPerson = executeSelectQuery("SELECT * FROM " + Availability.getTableName());
+		System.out.println("Data in availability table: ");
+		printData(availDataAfterTestPerson);
 		System.out.println();
 
 		// delete the employee, because we don't Test Person >:O!
 		System.out.println("Deleting " + e.getFullName() + "...");
 		e.delete();
+		
 		System.out.println("Data in employee table: ");
 		data = executeSelectQuery("SELECT * FROM " + Employee.getTableName());
 		printData(data);
+		System.out.println();
+		
+		ArrayList<HashMap<String, String>> availDataAfterDeletingTestPerson = executeSelectQuery("SELECT * FROM " + Availability.getTableName());
+		System.out.println("Data in availability table: ");
+		printData(availDataAfterDeletingTestPerson);
 		System.out.println();
 
 		// see the availability format for an employee - I only added data for

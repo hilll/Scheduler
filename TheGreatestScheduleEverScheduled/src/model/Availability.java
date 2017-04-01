@@ -228,7 +228,7 @@ public class Availability {
 		// business ATM
 		return Database.executeManipulateDataQuery(String.format(
 				"INSERT INTO `%s`.`%s` " + "(`emp_id`, `sunday`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`)"
-						+ " VALUES ('%d', '%s', '%s', '%s', '%s', '%s', '%s')",
+						+ " VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
 						Database.getName(), getTableName(), empID, availabilityStrings[0], availabilityStrings[1], availabilityStrings[2], availabilityStrings[3],
 						availabilityStrings[4], availabilityStrings[5], availabilityStrings[6]));
 	}

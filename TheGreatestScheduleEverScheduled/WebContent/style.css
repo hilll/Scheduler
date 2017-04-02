@@ -27,7 +27,6 @@
 .login {
     width: 100px;
     height: 100px;
-    background-color: red;
 	margin-left: auto; 
 	margin-right: auto;
     position: absolute;
@@ -47,6 +46,7 @@
 }
 
 body {
+	background-color: light-blue;
     
 }
 

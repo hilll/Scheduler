@@ -13,7 +13,7 @@
 
 <div class="navbar">
 	<h1>The Greatest Schedule Ever Scheduled <h1><br>
-	<a href="employeeHome.jsp">Home</a>
+	<a href="home.jsp">Home</a>
 	<a href="updateAvailability.jsp">Change Availability</a>
 </div>
 <br/>
@@ -21,6 +21,7 @@
 	<br><br><br><br><br><br><br><br><br><br>
 	<% String loggedIn = "Employee Logged in: " + Employee.getLoggedIn().getFullName(); %>
 	<%= loggedIn %>
+	
 
 </div>
 

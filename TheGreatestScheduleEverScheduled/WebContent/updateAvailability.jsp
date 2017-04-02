@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ page import="model.*" %>
+    <%@ page import="java.util.HashMap"%>
+    <%@ page import="java.util.Iterator" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -12,8 +14,8 @@
 </head>
 <body>
 <div class="navbar">
-  <a href="employeeHome.jsp">Generate Schedule</a>
-  <a href="employeeUpdateAvailability.jsp">Update Availability</a>
+  <a href="home.jsp">Generate Schedule</a>
+  <a href="updateAvailability.jsp">Update Availability</a>
 </div>
 <br/>
 <div class="main">
@@ -42,7 +44,9 @@
 <input type="submit" value ="submit" name = "Create Shift">
 
 <h1> Current Availabilities </h1>
-
+<% HashMap<String, TimeSlot> unavailabilities = Employee.getLoggedIn().getAvailability().getUnavailabilitySlots(); 
+	Iterator it = unavailabilities.entrySet().iterator();%>
+<%= %>
 </form>
 </div>
 

@@ -10,10 +10,9 @@
 </head>
 <body>
 <div class="navbar">
-  <a href="masterSchedule.jsp">Generate Schedule</a>
-  <a href="createShift.jsp">Create Shift</a>
-  <a href="deleteShift.jsp">Delete Shift</a>
-  <a href="createSchedule.jsp">Create Schedule</a>
+  <a href="home.jsp">Home</a>
+  <a href="updateAvailability.jsp">Update Availability</a>
+  <a href="updateShifts.jsp">Update Shifts</a>
 </div>
 <br/>
 <div class="main">

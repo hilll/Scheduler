@@ -13,8 +13,6 @@
 <body>
 	<div class="navbar">
 		<h1 style="margin-left: auto; margin-right: auto;">The Greatest Schedule Ever Scheduled <h1><br>
-		<a href="employeeHome.jsp">Home</a>
-		<a href="updateAvailability.jsp">Change Availability</a>
 	</div>
 	<div class="login">
 		<c:if test="!LoginController.getLoginFailed().equals(\"\")"> <%= LoginController.getLoginFailed() %> </c:if>

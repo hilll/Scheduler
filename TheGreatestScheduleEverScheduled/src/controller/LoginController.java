@@ -23,9 +23,11 @@ public class LoginController extends HttpServlet{
 			if(id < 0 ){
 //				out.println("Login Failed");
 				setLoginFailed("Login Failed");
+				response.sendRedirect("loginPage.jsp");
 			}else{
 				setLoginFailed("");
-				Employee.setLoggedIn(id);
+				Employee.setLoggedIn(Employee.loadFromID(id));
+				response.sendRedirect("employeeHome.jsp");
 				//out.printf(" got employee ID:%d\n", id);
 			}
 //			out.println("Got username: " + username);

@@ -18,8 +18,9 @@
 </div>
 <br/>
 <div class="main">
-	<% int loggedIn = Employee.getLoggedIn(); %>
-	<%= "loggedIn employee ID: " + Employee.getLoggedIn() %>
+	<br><br><br><br><br><br><br><br><br><br>
+	<% String loggedIn = "Employee Logged in: " + Employee.getLoggedIn().getFullName(); %>
+	<%= loggedIn %>
 
 </div>
 

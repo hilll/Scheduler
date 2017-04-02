@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import model.Availability;
 import model.Employee;
 import model.Schedule;
 
@@ -22,6 +23,11 @@ public class Database {
 		System.out.println("Data in employee table: ");
 		printData(data);
 		System.out.println();
+		
+		ArrayList<HashMap<String, String>> availData = executeSelectQuery("SELECT * FROM " + Availability.getTableName());
+		System.out.println("Data in availability table: ");
+		printData(availData);
+		System.out.println();
 
 		// to get the next ID to use for some table
 		System.out.println("Next new employee will have ID of: " + getNextIDForTable(Employee.getTableName()));
@@ -31,17 +37,29 @@ public class Database {
 		Employee e = new Employee(getNextIDForTable(Employee.getTableName()), "Test", "Person", "email", null, false);
 		System.out.println("Inserting new Employee: " + e.getFullName());
 		e.save();
+		
 		System.out.println("Data in employee table: ");
 		data = executeSelectQuery("SELECT * FROM " + Employee.getTableName());
 		printData(data);
+		System.out.println();
+		
+		ArrayList<HashMap<String, String>> availDataAfterTestPerson = executeSelectQuery("SELECT * FROM " + Availability.getTableName());
+		System.out.println("Data in availability table: ");
+		printData(availDataAfterTestPerson);
 		System.out.println();
 
 		// delete the employee, because we don't Test Person >:O!
 		System.out.println("Deleting " + e.getFullName() + "...");
 		e.delete();
+		
 		System.out.println("Data in employee table: ");
 		data = executeSelectQuery("SELECT * FROM " + Employee.getTableName());
 		printData(data);
+		System.out.println();
+		
+		ArrayList<HashMap<String, String>> availDataAfterDeletingTestPerson = executeSelectQuery("SELECT * FROM " + Availability.getTableName());
+		System.out.println("Data in availability table: ");
+		printData(availDataAfterDeletingTestPerson);
 		System.out.println();
 
 		// see the availability format for an employee - I only added data for
@@ -155,8 +173,14 @@ public class Database {
 
 	// check if a certain table already contains an id (check for if you want to UPDATE or INSERT)
 	public static boolean tableContainsID(String tableName, int id) {
-		ArrayList<HashMap<String, String>> res = executeSelectQuery(
-				String.format("SELECT * FROM `%s`.`%s` WHERE id = %d", Database.getName(), tableName, id));
+		ArrayList<HashMap<String, String>> res;
+		if (tableName.equals(Availability.getTableName())) {
+			res = executeSelectQuery(
+					String.format("SELECT * FROM `%s`.`%s` WHERE emp_id = %d", Database.getName(), tableName, id));
+		} else {
+			res = executeSelectQuery(
+					String.format("SELECT * FROM `%s`.`%s` WHERE id = %d", Database.getName(), tableName, id));
+		}
 		if (res.isEmpty()) {
 			return false;
 		}

@@ -26,12 +26,12 @@ public class TimeSlotTest {
 		assertTrue(ts3.canFit(ts2));
 		assertFalse(ts2.canFit(ts3));
 		
-		TimeSlot ts4 = new TimeSlot(0, 2, 57, 96, true);
+		TimeSlot ts4 = new TimeSlot(0, 2, 57, 95, true);
 		assertEquals(2, ts4.getDay());
 		assertEquals(57, ts4.getStart());
-		assertEquals(96, ts4.getEnd());
+		assertEquals(95, ts4.getEnd());
 		assertTrue(ts4.getIsManagerTimeSlot());
-		assertEquals("Tuesday: 2:15PM - 12:00AM", ts4.toString());
+		assertEquals("Tuesday: 2:15PM - 11:45PM", ts4.toString());
 		
 		TimeSlot ts5 = new TimeSlot(0, 1, 56, 95, true);
 		assertEquals(1, ts5.getDay());
@@ -58,5 +58,7 @@ public class TimeSlotTest {
 		TimeSlot ts11 = new TimeSlot(0, 0, 1, 15, true);
 		assertEquals("Sunday: 12:15AM - 3:45AM", ts11.toString());
 		
+		TimeSlot ts12 = new TimeSlot(0, 0, 47, 49, true);
+		assertEquals("Sunday: 11:45AM - 12:15PM", ts12.toString());
 	}
 }

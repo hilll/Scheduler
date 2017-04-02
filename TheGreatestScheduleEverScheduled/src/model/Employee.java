@@ -1,6 +1,5 @@
 package model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -128,13 +127,15 @@ public class Employee implements Comparable<Employee> {
 
 	// save Employee into DB via insert or update
 	public boolean save() {
+		
+		boolean result;
 		// UPDATE
 		if (Database.tableContainsID(getTableName(), empID)) {
-			return Database.executeManipulateDataQuery(String.format(
+			result = Database.executeManipulateDataQuery(String.format(
 					"UPDATE `%s`.`%s` SET `fname`='%s',`lname`='%s',`email`='%s',`business_id`=%d,`is_manager`=%d"
 							+ " WHERE `id`=%d",
 					Database.getName(), getTableName(), fname, lname, email, 0, empID, isManager ? 1 : 0));
-		}
+		} else {
 
 		/*
 		 * int newID = Database.getNextIDForTable(getTableName()); if (newID <
@@ -144,10 +145,13 @@ public class Employee implements Comparable<Employee> {
 
 		// 0 is placeholder for business_id for now, since there is no ID in
 		// business ATM
-		return Database.executeManipulateDataQuery(String.format(
+		result = Database.executeManipulateDataQuery(String.format(
 				"INSERT INTO `%s`.`%s` " + "(`id`, `fname`, `lname`, `email`, `business_id`, `is_manager`)"
 						+ " VALUES ('%d', '%s', '%s', '%s', %d, %d)",
 				Database.getName(), getTableName(), empID, fname, lname, email, 0, isManager ? 1 : 0));
+		}
+		this.getAvailability().save(empID);
+		return result;
 	}
 
 	public static Employee getLoggedIn() {

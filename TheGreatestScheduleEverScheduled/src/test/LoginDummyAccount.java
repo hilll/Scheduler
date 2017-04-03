@@ -8,7 +8,7 @@ import model.*;
 
 public class LoginDummyAccount {
 	
-	static Scanner input = new Scanner(System.in);
+	/*static Scanner input = new Scanner(System.in);
 	static Account account;
 	
 	public static void main(String args[]){
@@ -91,16 +91,13 @@ public class LoginDummyAccount {
 
 	private static void saveNewDummyAccount() {
 		Account account = new Account();
-		Business business = new Business();
-		
-		// DUmmy Company Scedule, 2 10 hour shifts a day, 7 day of the week
-		Schedule businessSchedule = new Schedule(account.getBusiness());
+		Business business = new Business(-1, "Dummy Account");
+		// DUmmy Company Schedule, 2 10 hour shifts a day, 7 day of the week
 		for(int i = 0; i < 7; i++){
-			businessSchedule.addTimeBlock(i, 0, 10, false, null);
-			businessSchedule.addTimeBlock(i, 10, 20, false, null);
-			businessSchedule.addTimeBlock(i, 0, 20, false, null);
+			business.createShift(i, 0, 10, false);
+			business.createShift(i, 10, 20, false);
+			business.createShift(i, 0, 20, false);
 		}
-		
 		
 		//Fill Company Pool with Shifts
 		businessSchedule.fillCompanyPool();
@@ -151,5 +148,5 @@ public class LoginDummyAccount {
 		
 		
 	}
-
+*/
 }

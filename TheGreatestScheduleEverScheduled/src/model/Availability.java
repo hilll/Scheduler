@@ -55,6 +55,21 @@ public class Availability {
 		this.totalUnavailabilityBlocks = 0;
 	}
 	
+	public static String[] loadAvailabilityFromID(int id) {
+		String availQuery = "SELECT * FROM " + getTableName() + " WHERE emp_id=" + id; 
+		ArrayList<HashMap<String, String>> aresult = Database.executeSelectQuery(availQuery);
+		HashMap<String, String> am = aresult.get(0);
+		String[] avail = new String[7];
+		avail[0] = am.get("sunday");
+		avail[1] = am.get("monday");
+		avail[2] = am.get("tuesday");
+		avail[3] = am.get("wednesday");
+		avail[4] = am.get("thursday");
+		avail[5] = am.get("friday");
+		avail[6] = am.get("saturday");
+		return avail;
+	}
+	
 	private void fillPools(int day) {
 		String daysAvailability = availabilityStrings[day];
 		int streakType = -1; // 1 if currently counting available slots, 0 otherwise
@@ -112,7 +127,7 @@ public class Availability {
 	 * should only be called from fillPools method - does not update availabilityStrings
 	 */
 	private void addUnavailability(int day, int start, int end) {
-		TimeSlot slot = new TimeSlot(-1, day, start, end, isManager);
+		TimeSlot slot = new TimeSlot(-1, null, day, start, end, isManager);
 		unavailabilityList.add(slot);
 	}
 	
@@ -159,7 +174,7 @@ public class Availability {
 	 * should only be called from fillPools method - does not update availabilityStrings
 	 */
 	private void addAvailability(int day, int start, int end) {
-		TimeSlot slot = new TimeSlot(-1, day, start, end, isManager);
+		TimeSlot slot = new TimeSlot(-1, null, day, start, end, isManager);
 		this.availabilityByDay.get(day).add(slot);
 	}
 

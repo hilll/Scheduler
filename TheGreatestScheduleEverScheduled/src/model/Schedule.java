@@ -1,15 +1,23 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import controller.Database;
 
 public class Schedule {
 	
 	private ArrayList<ArrayList<TimeSlot>> shiftsByDay;
 	private ArrayList<TimeSlot> allShiftsPool;
-	private Business bus;
+	private int id;
 	
-	public Schedule(Business bus){
-		this.bus = bus;
+	public Schedule(){
+		int id = Database.getNextIDForTable(getTableName()); 
+		if (id < 0) { 
+			System.out.println("an error occurred while getting next ID return false");
+		} else {
+		    this.id = id;
+		}
 		this.shiftsByDay = new ArrayList<ArrayList<TimeSlot>>(7);
 		for(int i = 0; i < 7; ++i){
 			shiftsByDay.add(new ArrayList<TimeSlot>());
@@ -17,9 +25,52 @@ public class Schedule {
 		this.allShiftsPool = new ArrayList<>();
 	}
 	
+	public static Schedule loadFromID(int id) {
+		String query = "SELECT * FROM " + getMasterScheduleTableName() + " WHERE sched_id=" + id;
+		ArrayList<HashMap<String, String>> result = Database.executeSelectQuery(query);
+		if (result.size() == 0)
+			return null;
+		Schedule loaded = new Schedule();
+		HashMap<String, String> hm;
+		for (int i = 0; i < result.size(); i++) {
+			hm = result.get(i);
+			loaded.addShift(TimeSlot.loadFromID(Integer.parseInt(hm.get("timeslot_id")), Integer.parseInt(hm.get("emp_id"))));
+		}
+		loaded.setID(id);
+		return loaded;
+	}
+	
+	public static String getTableName() {
+		return "schedule";
+	}
+	
+	public static String getMasterScheduleTableName() {
+		return "master_schedule";
+	}
+	
+	public void setID(int id) {
+		this.id = id;
+	}
+	
+	public int getID() {
+		return this.id;
+	}
+	
+	/*
+	 * Adds slot to the appropriate day of the shiftsByDay list.
+	 * Use this to add an existing shift to the Schedule when you're loading from the database.
+	 */
+	public void addShift(TimeSlot slot) {
+		shiftsByDay.get(slot.getDay()).add(slot);
+		allShiftsPool.add(slot);
+	}
+	
+	/*
+	 * Use this to create an entirely new shift.
+	 */
 	public void addTimeBlock( int day, int start, int end, boolean isManager, Employee emp) {
-		TimeSlot slot = new TimeSlot(bus.getNewTimeSlotID(), day, start, end, isManager);
-		slot.setEmployee(emp);
+		TimeSlot slot = new TimeSlot(TimeSlot.getNewTimeSlotID(), null, day, start, end, isManager);
+		slot.setEmployeeID(emp.getID());
 		this.shiftsByDay.get(day).add(slot);
 	}
 	
@@ -40,7 +91,7 @@ public class Schedule {
 	}
 	
 	public Schedule makeNewSchedule(Employee[] staff){
-		Schedule newSchedule = new Schedule(this.bus);
+		Schedule newSchedule = new Schedule();
 		return newSchedule;	
 	}
 	
@@ -66,9 +117,10 @@ public class Schedule {
 		}
 	}
 	
-	public void copyBlockPool(Schedule that) {
+	public void copyAllShiftsPool(Schedule that) {
 		for(TimeSlot slot : that.allShiftsPool){
-			this.allShiftsPool.add(new TimeSlot(slot.getID(), slot.getDay(), slot.getStart(), slot.getEnd(), slot.getIsManagerTimeSlot()));
+			//this.allShiftsPool.add(new TimeSlot(slot.getID(), slot.getTimeAsString(), slot.getDay(), slot.getStart(), slot.getEnd(), slot.getIsManagerTimeSlot()));
+			this.allShiftsPool.add(slot);
 		}
 	}
 	
@@ -105,7 +157,7 @@ public class Schedule {
 					if(this.shiftsByDay.get(i).get(block).getStart() == (c/3)){
 						System.out.print("|");
 						
-						if(this.shiftsByDay.get(i).get(block).getEmployee() != null){
+						if(this.shiftsByDay.get(i).get(block).getEmployeeID() != -1){
 							String name = this.shiftsByDay.get(i).get(block).getEmployee().getFullName() + "----------";
 							System.out.print(name.substring(0, 8));
 						}
@@ -136,13 +188,43 @@ public class Schedule {
 	public ArrayList<TimeSlot> getAllShiftsPool() {
 		return allShiftsPool;
 	}
-	
+
 	public ArrayList<ArrayList<TimeSlot>> getShiftsByDay() {
 		return shiftsByDay;
 	}
-	
-	public Business getBusiness() {
-		return this.bus;
+
+	// delete Schedule from DB: schedule and master_schedule tables
+	public boolean delete() {
+		Database.executeManipulateDataQuery(
+				String.format("DELETE FROM `%s`.`%s` WHERE `sched_id`='%d'", Database.getName(), getMasterScheduleTableName(), getID()));
+		return Database.executeManipulateDataQuery(
+				String.format("DELETE FROM `%s`.`%s` WHERE `id`='%d'", Database.getName(), getTableName(), getID()));
 	}
 
+	// save Schedule into DB via insert or update
+	public boolean save(int businessID) {
+
+		boolean result = true;
+		boolean slotResult;
+		// UPDATE
+		if (Database.tableContainsID(getTableName(), getID())) {
+			// update TimeSlots in the master_schedule table
+			for (TimeSlot slot : allShiftsPool) {
+				slotResult = slot.save(slot.getID());
+				if (!slotResult)
+					result = false;
+			}
+		} else {
+			result = Database.executeManipulateDataQuery(String.format(
+					"INSERT INTO `%s`.`%s` " + "(`id`, `business_id`)"
+							+ " VALUES ('%d', '%d')",
+							Database.getName(), getTableName(), id, businessID));
+			for (TimeSlot slot : allShiftsPool) {
+				slotResult = slot.save(slot.getID());
+				if (!slotResult)
+					result = false;
+			}
+		}
+		return result;
+	}
 }

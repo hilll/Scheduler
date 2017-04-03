@@ -16,6 +16,8 @@ public class Employee implements Comparable<Employee> {
 	// week
 	private boolean isManager;
 	private Availability availability;
+	private Business bus;
+	private String currentSchedule;
 
 	public static String getTableName() {
 		return "employee";
@@ -39,24 +41,50 @@ public class Employee implements Comparable<Employee> {
 		if (result.size() == 0)
 			return null;
 		HashMap<String, String> hm = result.get(0);
-		String availQuery = "SELECT * FROM " + Availability.getTableName() + " WHERE emp_id=" + id; 
-		ArrayList<HashMap<String, String>> aresult = Database.executeSelectQuery(availQuery);
-		HashMap<String, String> am = aresult.get(0);
-		String[] avail = new String[7];
-		avail[0] = am.get("sunday");
-		avail[1] = am.get("monday");
-		avail[2] = am.get("tuesday");
-		avail[3] = am.get("wednesday");
-		avail[4] = am.get("thursday");
-		avail[5] = am.get("friday");
-		avail[6] = am.get("saturday");
+		String[] avail = Availability.loadAvailabilityFromID(id);
 		boolean isManager;
 		if (hm.get("is_manager").equals("1"))
 			isManager = true;
 		else
 			isManager = false;
 		Employee loaded = new Employee(Integer.parseInt(hm.get("id")), hm.get("fname"), hm.get("lname"), hm.get("email"), avail, isManager);
+		Business bus = Business.loadFromID(Integer.parseInt(hm.get("business_id")));
+		bus.addEmployee(loaded);
+		loaded.setBusiness(bus);
+		setCurrentSchedule(loaded);
 		return loaded;
+	}
+
+	public void setBusiness(Business bus) {
+		this.bus = bus;
+	}
+	
+	private Business getBusiness() {
+		return this.bus;
+	}
+	
+	private static void setCurrentSchedule(Employee emp) {
+		ArrayList<ArrayList<TimeSlot>> shiftList = emp.getBusiness().getEmployeesCurrentSchedule(emp.getID());
+		String schedule = "";
+		for (int i = 0; i < 7; i++) {
+			//schedule += Day.get(i);
+			if (shiftList.get(i).size() != 0) {
+				for (TimeSlot ts : shiftList.get(i)) {
+					schedule += ts.toString();
+					schedule += "\n";
+				}
+			}
+		}
+		schedule.trim();
+		emp.setSched(schedule);
+	}
+	
+	public void setSched(String sched) {
+		this.currentSchedule = sched;
+	}
+	
+	public String getSchedule() {
+		return this.currentSchedule;
 	}
 
 	/*
@@ -136,12 +164,6 @@ public class Employee implements Comparable<Employee> {
 							+ " WHERE `id`=%d",
 					Database.getName(), getTableName(), fname, lname, email, 0, empID, isManager ? 1 : 0));
 		} else {
-
-		/*
-		 * int newID = Database.getNextIDForTable(getTableName()); if (newID <
-		 * 0) { // an error occurred while getting next ID return false; }
-		 */ // THE NEW ID SHOULD ACTUALLY BE ADDED DURING EMPLOYEE CREATION, NOT
-			// SAVING
 
 		// 0 is placeholder for business_id for now, since there is no ID in
 		// business ATM

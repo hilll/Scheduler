@@ -105,7 +105,7 @@ public class Database {
 		if (data == null) {
 			return -1; // some error occurred during the query
 		}
-		if (data.isEmpty()) {
+		if (data.isEmpty() || data.get(0).get("MAX(id)") == null) {
 			return 0; // there were no other records in the table
 		}
 		// get the max id from first (and only) record returned
@@ -184,6 +184,14 @@ public class Database {
 		if (res.isEmpty()) {
 			return false;
 		}
+		return true;
+	}
+	
+	public static boolean masterSchedContainsIDPair(int schedID, int timeSlotID) {
+		ArrayList<HashMap<String, String>> res = executeSelectQuery(
+				String.format("SELECT * FROM `%s`.`%s` WHERE sched_id = %d AND timeslot_id = %d", Database.getName(), schedID, timeSlotID));
+		if (res.isEmpty())
+			return false;
 		return true;
 	}
 }

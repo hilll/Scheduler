@@ -15,6 +15,7 @@
 	<h1>The Greatest Schedule Ever Scheduled <h1><br>
 	<a href="home.jsp">Home</a>
 	<a href="updateAvailability.jsp">Change Availability</a>
+	<a href="loginPage.jsp">Logout</a>
 </div>
 <br/>
 <div class="main">

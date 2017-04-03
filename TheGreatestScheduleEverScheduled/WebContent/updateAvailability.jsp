@@ -45,8 +45,13 @@
 
 <h1> Current Availabilities </h1>
 <% HashMap<String, TimeSlot> unavailabilities = Employee.getLoggedIn().getAvailability().getUnavailabilitySlots(); 
-	Iterator it = unavailabilities.entrySet().iterator();%>
-<%= %>
+	Iterator it = unavailabilities.entrySet().iterator();
+	while (it.hasNext()) {
+		HashMap.Entry pair = (HashMap.Entry)it.next();
+	
+	%>
+	<% pair.getKey();%>
+	<% } %>
 </form>
 </div>
 

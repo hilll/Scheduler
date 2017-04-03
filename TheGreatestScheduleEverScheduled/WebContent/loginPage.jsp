@@ -11,6 +11,8 @@
 </head>
 
 <body>
+
+	<% Employee.setLoggedIn(null); %>
 	<div class="navbar">
 		<h1 style="margin-left: auto; margin-right: auto;">The Greatest Schedule Ever Scheduled <h1><br>
 	</div>

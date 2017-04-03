@@ -6,18 +6,23 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>The Greatest Schedule Ever Scheduled</title>
 <link rel="stylesheet" type="text/css" href="style.css">
+<%@ page import="model.Employee" %>
 </head>
 <body>
 
 
 <div class="navbar">
 	<h1>The Greatest Schedule Ever Scheduled <h1><br>
-	<a href="managerHome.jsp">Home</a>
+	<a href="home.jsp">Home</a>
 	<a href="updateAvailability.jsp">Change Availability</a>
-	<a href="updateShifts.jsp">Update Shifts</a>
 </div>
 <br/>
 <div class="main">
+	<br><br><br><br><br><br><br><br><br><br>
+	<% String loggedIn = "Employee Logged in: " + Employee.getLoggedIn().getFullName(); %>
+	<%= loggedIn %>
+	
+
 </div>
 
 

@@ -27,7 +27,6 @@
 .login {
     width: 100px;
     height: 100px;
-    background-color: red;
 	margin-left: auto; 
 	margin-right: auto;
     position: absolute;
@@ -43,9 +42,11 @@
 /* Main content */
 .main {
     margin-top: 50px; /* Add a top margin to avoid content overlay */
+    clear: both;
 }
 
 body {
+	background-color: light-blue;
     
 }
 

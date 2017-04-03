@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import model.Availability;
+import model.Business;
 import model.Employee;
 import model.Schedule;
 
@@ -17,6 +18,8 @@ public class Database {
 	public static String dbName = "ccdb";
 
 	public static void main(String args[]) {
+		
+		Business forTesting = Business.loadFromID(0);
 		
 		// a little test to see how things work
 		ArrayList<HashMap<String, String>> data = executeSelectQuery("SELECT * FROM " + Employee.getTableName());
@@ -34,7 +37,9 @@ public class Database {
 		System.out.println();
 
 		// adding a new employee to the DB
-		Employee e = new Employee(getNextIDForTable(Employee.getTableName()), "Test", "Person", "email", null, false);
+		//Employee e = new Employee(getNextIDForTable(Employee.getTableName()), "Test", "Person", "email", null, false);
+		Employee e = new Employee(-1, "Test", "Person", "email", null, false);
+		e.setBusiness(forTesting);
 		System.out.println("Inserting new Employee: " + e.getFullName());
 		e.save();
 		
@@ -105,7 +110,7 @@ public class Database {
 		if (data == null) {
 			return -1; // some error occurred during the query
 		}
-		if (data.isEmpty()) {
+		if (data.isEmpty() || data.get(0).get("MAX(id)") == null) {
 			return 0; // there were no other records in the table
 		}
 		// get the max id from first (and only) record returned
@@ -184,6 +189,14 @@ public class Database {
 		if (res.isEmpty()) {
 			return false;
 		}
+		return true;
+	}
+	
+	public static boolean masterSchedContainsIDPair(int schedID, int timeSlotID) {
+		ArrayList<HashMap<String, String>> res = executeSelectQuery(
+				String.format("SELECT * FROM `%s`.`%s` WHERE sched_id = %d AND timeslot_id = %d", Database.getName(), Schedule.getMasterScheduleTableName(), schedID, timeSlotID));
+		if (res.isEmpty())
+			return false;
 		return true;
 	}
 }

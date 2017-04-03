@@ -10,5 +10,4 @@ public enum Day {
 	Day(int day){
 		this.day = day;
 	}
-
 }

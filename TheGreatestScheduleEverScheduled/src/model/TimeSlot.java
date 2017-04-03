@@ -26,12 +26,15 @@ public class TimeSlot {
 			setTimeAsString();
 		}
 		if (start < 0 || end >= 96) {
+			new Exception().printStackTrace(System.out);
 			System.out.println("Indexes are out of bounds for start or end. must be 0-95");
 		}
 		this.day = day;
 		this.isManagerTimeSlot = isManagerTimeSlot;
 		this.id =id;
 		this.employeeID = -1;
+		if (id != -1)
+			this.saveTimeSlot(id);
 	}
 	
 	public static TimeSlot loadFromID(int id, int empID) {
@@ -207,6 +210,11 @@ public class TimeSlot {
 		return Database.executeManipulateDataQuery(
 				String.format("DELETE FROM `%s`.`%s` WHERE `id`='%d'", Database.getName(), getTableName(), timeSlotID));
 	}
+	
+	public static void deleteTS(int timeSlotID) {
+		Database.executeManipulateDataQuery(
+				String.format("DELETE FROM `%s`.`%s` WHERE `id`='%d'", Database.getName(), getTableName(), timeSlotID));
+	}
 
 	public boolean save(int schedID) {
 		boolean result;
@@ -220,7 +228,6 @@ public class TimeSlot {
 					"INSERT INTO `%s`.`%s` " + "(`sched_id`, `timeslot_id`, `emp_id`)"
 							+ " VALUES (%d, %d, %d)",
 							Database.getName(), Schedule.getMasterScheduleTableName(), schedID, this.getID(), this.getEmployeeID()));
-			result = saveTimeSlot(this.getID());
 		}
 		return result;
 	}

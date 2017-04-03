@@ -93,7 +93,7 @@ public class EmployeeTest {
 
 	@Test
 	public void testUpdate() {
-		Employee emp = Employee.loadFromID(1);
+		Employee emp = Employee.loadFromID(1, null);
 		assertEquals(1, emp.getID());
 		assertEquals("Katie", emp.getFirstName());
 		assertEquals("Walters", emp.getLastName());
@@ -116,7 +116,7 @@ public class EmployeeTest {
 				"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", 
 				emp.getAvailability().toString());
 		emp.save();
-		Employee emp2 = Employee.loadFromID(1);
+		Employee emp2 = Employee.loadFromID(1, null);
 		assertEquals(1, emp.getID());
 		assertEquals("Katie", emp.getFirstName());
 		assertEquals("Walters", emp.getLastName());

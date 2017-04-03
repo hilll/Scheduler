@@ -7,13 +7,19 @@ import java.util.Random;
 
 import controller.Database;
 
+/**
+ * Availability 
+ * 
+ * Employees each have an availability. Stand-alone Availabilities should not be created,
+ * when a new employee is created or loaded, the Availability information is automatically
+ * populated.
+ * 
+ * @author Katie
+ *
+ */
 public class Availability {
-	
-	public static String getTableName() {
-		return "availability";
-	}
 
-	// forgive the ugliness. When a new employee is created, its availability is auto-set to this to start with
+	// When a new employee is created, its availability is auto-set to this to start with
 	private final String[] starterAvailability = { "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
 												   "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
 			                                       "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
@@ -22,20 +28,26 @@ public class Availability {
 			                                       "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
 			                                       "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",	   
 												 };
-	// we can change this constant to alter the shortest shifts an employee will be scheduled for
+	// shortest shifts an employee will be scheduled for
 	private final int MIN_SHIFT_LENGTH = 1; // hours * (4 blocks per hour)
 	// array of lists (one for each day of the week) of TimeBlocks employee is available to work
 	private ArrayList<ArrayList<TimeSlot>> availabilityByDay;
-	//private ArrayList<TimeSlot>[] timeBlocks;
 	// list of all shifts from the schedule employee would be able to take
 	private ArrayList<TimeSlot> availabilityPool;
-	// list of time blocks during which employee has stated he/she is unavailable:
+	// list of time blocks during which employee has stated he/she is unavailable
 	private ArrayList<TimeSlot> unavailabilityList; 
-	private int totalAvailabilityBlocks;
-	private int totalUnavailabilityBlocks;
-	private String[] availabilityStrings; // 7 strings of 96 characters: '1's (available) and '0's (unavailable)
+	// 7 strings of 96 characters: '1's (available) and '0's (unavailable)
+	private String[] availabilityStrings;
+	// true if employee is a manager, false otherwise
 	private boolean isManager;
 	
+	/**
+	 * Arguments:
+	 * 	availability: should be null for new Availability object,
+	 * 			actual String[] of length 7 for loaded one.
+	 * 	isMananger: whether the availability belongs to a manager
+	 * 			or not.
+	 */
 	public Availability(String[] availability, boolean isManager){
 		if (availability == null) {
 			this.availabilityStrings = starterAvailability;
@@ -50,11 +62,14 @@ public class Availability {
 		this.availabilityPool = new ArrayList<>();
 		this.unavailabilityList = new ArrayList<>();
 		for (int i = 0; i < 7; i++)
-			fillPools(i);
-		this.totalAvailabilityBlocks = 0;
-		this.totalUnavailabilityBlocks = 0;
+			fillUnavailabilityAndAvailabilitiesByDay(i);
 	}
 	
+	/**
+	 * 
+	 * @param id of the availability to load
+	 * @return availability strings
+	 */
 	public static String[] loadAvailabilityFromID(int id) {
 		String availQuery = "SELECT * FROM " + getTableName() + " WHERE emp_id=" + id; 
 		ArrayList<HashMap<String, String>> aresult = Database.executeSelectQuery(availQuery);
@@ -70,7 +85,20 @@ public class Availability {
 		return avail;
 	}
 	
-	private void fillPools(int day) {
+	/**
+	 * 
+	 * @return the table name for Availability
+	 */
+	public static String getTableName() {
+		return "availability";
+	}
+	
+	/*
+	 * Processes a single day's availability string to populate the 
+	 * unavailabilityList and availabilityByDay array with the appropriate 
+	 * TimeSlots when an Employee is loaded or created.
+	 */
+	private void fillUnavailabilityAndAvailabilitiesByDay(int day) {
 		String daysAvailability = availabilityStrings[day];
 		int streakType = -1; // 1 if currently counting available slots, 0 otherwise
 		int unavailableStart = -1;
@@ -124,7 +152,10 @@ public class Availability {
 	}
 	
 	/*
-	 * should only be called from fillPools method - does not update availabilityStrings
+	 * Should only be called from fillUnavailabilityAndAvailabilitiesByDay 
+	 * method. It can't be used to change an Employee's unavailability, because
+	 * it does not update availabilityStrings and thus won't be saved in the 
+	 * database when the Employee logs out.
 	 */
 	private void addUnavailability(int day, int start, int end) {
 		TimeSlot slot = new TimeSlot(-1, null, day, start, end, isManager);
@@ -132,7 +163,19 @@ public class Availability {
 	}
 	
 	/*
-	 * returns a hashmap with keys being timeslot toStrings and values being the timeslot itself
+	 * Should only be called from fillUnavailabilityAndAvailabilitiesByDay 
+	 * method. It can't be used to change an Employee's availability, because
+	 * it does not update availabilityStrings and thus won't be saved in the 
+	 * database when the Employee logs out.
+	 */
+	private void addAvailability(int day, int start, int end) {
+		TimeSlot slot = new TimeSlot(-1, null, day, start, end, isManager);
+		this.availabilityByDay.get(day).add(slot);
+	}
+	
+	/**
+	 * Returns a HashMap with keys being String representations of TimeSlots,
+	 * and values being the TimeSlot itself.
 	 */
 	public HashMap<String, TimeSlot> getUnavailabilitySlots() {
 		HashMap<String, TimeSlot> slots = new HashMap<String, TimeSlot>();
@@ -142,8 +185,9 @@ public class Availability {
 		return slots;
 	}
 	
-	/*
-	 * returns true is TimeSlot was successfully removed, false if it wasn't found
+	/**
+	 * Returns true is TimeSlot was successfully removed from this 
+	 * unavailabilityList, false if it wasn't found.
 	 */
 	public boolean removeUnavailability(TimeSlot slot) {
 		for (TimeSlot ts : unavailabilityList) {
@@ -156,8 +200,10 @@ public class Availability {
 		return false;
 	}
 	
-	/*
-	 * returns false if there was an input error
+	/**
+	 * Changes the value of an availability string. Inputs: day: which string to change,
+	 * start and end: segment of the availability string to change, availability: what 
+	 * to change the segment to. Does not check to make sure a change is actually being made.
 	 */
 	public boolean updateAvailabilityStrings(int day, int start, int end, char availability) {
 		if (end < start)
@@ -169,41 +215,35 @@ public class Availability {
 		availabilityStrings[day] = String.valueOf(changeThis);
 		return true;
 	}
-	
-	/*
-	 * should only be called from fillPools method - does not update availabilityStrings
-	 */
-	private void addAvailability(int day, int start, int end) {
-		TimeSlot slot = new TimeSlot(-1, null, day, start, end, isManager);
-		this.availabilityByDay.get(day).add(slot);
-	}
 
-	public void setSchedulePrefrences(){
-		//Randomize
+	/**
+	 * Currently randomly shuffles this Employee's availabilityPool. Maybe in
+	 * future iterations it can be used to add employee preference into the 
+	 * shift assignment process.
+	 */
+	public void setSchedulePrefrences() {
 		long seed = System.nanoTime();
 		Collections.shuffle(this.availabilityPool, new Random(seed));
 	}
-	
-	public TimeSlot getAvailabilityBlock(TimeSlot slot){
-		for(TimeSlot block : this.availabilityPool){
-			if(block.isEqualByDayAndTimes(slot)){
-				return block;
-			}
-		}
-		return null;
-	}
 
+	/**
+	 * Returns the Employee's availabilityPool.
+	 */
 	public ArrayList<TimeSlot> getAvailabilityPool() {
 		return availabilityPool;
 	}
 	
-	public void fillBlockPool(Schedule company){
+	/**
+	 * Fills the employee's availabilityPool with any shifts from company's 
+	 * schedule that fit within the employee's availability constraints.
+	 */
+	public void fillAvailabilityPool(Schedule company) {
 		this.availabilityPool = new ArrayList<TimeSlot>();
-		for(int day = 0; day < this.availabilityByDay.size(); day++){	//time blocks this has
-			for(TimeSlot thisSlot : this.availabilityByDay.get(day)){
-				for(TimeSlot thatSlot : company.getShiftsByDay().get(day)){	//time blocks that has
-					if(thisSlot.canFit(thatSlot)){
-						this.availabilityPool.add(thatSlot);		//Put shift in emp pool
+		for(int day = 0; day < this.availabilityByDay.size(); day++) { //time blocks this has
+			for(TimeSlot thisSlot : this.availabilityByDay.get(day)) {
+				for(TimeSlot thatSlot : company.getShiftsByDay().get(day)) { //time blocks that has
+					if(thisSlot.canFit(thatSlot)) {
+						this.availabilityPool.add(thatSlot); //Put shift in emp pool
 						continue; // don't add the same availability slot twice
 					}
 				}
@@ -211,25 +251,40 @@ public class Availability {
 		}
 	}
 	
+	/**
+	 * Returns the Employee's availabilityStrings.
+	 */
 	public String[] getAvailabilityStrings() {
 		return availabilityStrings;
 	}
 	
+	/**
+	 * Returns this Employee's availabilityByDay.
+	 */
 	public ArrayList<ArrayList<TimeSlot>> getAvailabilityByDay() {
 		return availabilityByDay;
 	}
 	
+	/**
+	 * Returns this Employee's unavailabilityList.
+	 */
 	public ArrayList<TimeSlot> getUnavailabilityList() {
 		return unavailabilityList;
 	}
 
-	// delete Availability from DB
+	/**
+	 * Deletes the Availability that belongs to the Employee with empID 
+	 * from the Database.
+	 */
 	public boolean delete(int empID) {
 		return Database.executeManipulateDataQuery(
 				String.format("DELETE FROM `%s`.`%s` WHERE `emp_id`='%d'", Database.getName(), getTableName(), empID));
 	}
 
-	// save Employee into DB via insert or update
+	/**
+	 * Saves or updates the Availability that belongs to the Employee with 
+	 * empID in the Database.
+	 */
 	public boolean save(int empID) {
 		// UPDATE
 		if (Database.tableContainsID(getTableName(), empID)) {
@@ -239,8 +294,7 @@ public class Availability {
 					availabilityStrings[4], availabilityStrings[5], availabilityStrings[6], empID));
 		}
 
-		// 0 is placeholder for business_id for now, since there is no ID in
-		// business ATM
+		// INSERT
 		return Database.executeManipulateDataQuery(String.format(
 				"INSERT INTO `%s`.`%s` " + "(`emp_id`, `sunday`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`)"
 						+ " VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
@@ -248,6 +302,10 @@ public class Availability {
 						availabilityStrings[4], availabilityStrings[5], availabilityStrings[6]));
 	}
 	
+	/**
+	 * Returns a String representation of this Availability's 
+	 * availabilityStrings.
+	 */
 	public String toString() {
 		String result = availabilityStrings[0];
 		for (int i = 1; i < 7; i++) {

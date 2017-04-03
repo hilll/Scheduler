@@ -26,7 +26,7 @@ public class LoginController extends HttpServlet{
 				response.sendRedirect("loginPage.jsp");
 			}else{
 				setLoginFailed("");
-				Employee.setLoggedIn(Employee.loadFromID(id));
+				Employee.setLoggedIn(Employee.loadFromID(id, null));
 				response.sendRedirect("home.jsp");
 				//out.printf(" got employee ID:%d\n", id);
 			}

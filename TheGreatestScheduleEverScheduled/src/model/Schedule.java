@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import controller.Database;
@@ -252,6 +253,17 @@ public class Schedule {
 	 */
 	public ArrayList<TimeSlot> getAllShiftsPool() {
 		return allShiftsPool;
+	}
+	
+	public ArrayList<String> getAllShiftsAsStrings() {
+		ArrayList<String> shifts = new ArrayList<>();
+		ArrayList<TimeSlot> allShifts = getAllShiftsPool();
+		Collections.sort(allShifts);
+		for (TimeSlot ts : allShifts) {
+			shifts.add(ts.toString());
+		}
+		Collections.sort(shifts);
+		return shifts;
 	}
 
 	/**

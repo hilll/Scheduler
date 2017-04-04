@@ -42,6 +42,8 @@ public class Availability {
 	// true if employee is a manager, false otherwise
 	private boolean isManager;
 	
+	private HashMap<String, TimeSlot> availabilityHash;
+	
 	/**
 	 * Arguments:
 	 * 	availability: should be null for new Availability object,
@@ -64,6 +66,7 @@ public class Availability {
 		this.unavailabilityList = new ArrayList<>();
 		for (int i = 0; i < 7; i++)
 			fillUnavailabilityAndAvailabilitiesByDay(i);
+		this.availabilityHash = new HashMap<>();
 	}
 	
 	/**
@@ -161,6 +164,7 @@ public class Availability {
 	private void addUnavailability(int day, int start, int end) {
 		TimeSlot slot = new TimeSlot(-1, null, day, start, end, isManager);
 		unavailabilityList.add(slot);
+		availabilityHash.put(slot.toString(), slot);
 	}
 	
 	/*
@@ -203,11 +207,16 @@ public class Availability {
 		for (TimeSlot ts : unavailabilityList) {
 			if (ts.isEqualByDayAndTimes(slot)) {
 				unavailabilityList.remove(ts);
+				availabilityHash.remove(ts.toString());
 				updateAvailabilityStrings(ts.getDay(), ts.getStart(), ts.getEnd(), '1');
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	public boolean removeUnavailability(String slotStr) {
+		return removeUnavailability(availabilityHash.get(slotStr));
 	}
 	
 	/**

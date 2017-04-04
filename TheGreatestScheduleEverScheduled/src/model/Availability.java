@@ -231,6 +231,7 @@ public class Availability {
 			changeThis[i] = availability;
 		}
 		availabilityStrings[day] = String.valueOf(changeThis);
+		fillUnavailabilityAndAvailabilitiesByDay(day);
 		return true;
 	}
 

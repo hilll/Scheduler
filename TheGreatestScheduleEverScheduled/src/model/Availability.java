@@ -2,7 +2,6 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -63,10 +62,10 @@ public class Availability {
 			availabilityByDay.add(new ArrayList<TimeSlot>());
 		}
 		this.availabilityPool = new ArrayList<>();
+		this.availabilityHash = new HashMap<>();
 		this.unavailabilityList = new ArrayList<>();
 		for (int i = 0; i < 7; i++)
 			fillUnavailabilityAndAvailabilitiesByDay(i);
-		this.availabilityHash = new HashMap<>();
 	}
 	
 	/**

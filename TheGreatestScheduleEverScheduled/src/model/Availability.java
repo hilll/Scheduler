@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -177,10 +178,19 @@ public class Availability {
 	 * Returns a HashMap with keys being String representations of TimeSlots,
 	 * and values being the TimeSlot itself.
 	 */
-	public HashMap<String, TimeSlot> getUnavailabilitySlots() {
+	/*public HashMap<String, TimeSlot> getUnavailabilitySlots() {
 		HashMap<String, TimeSlot> slots = new HashMap<String, TimeSlot>();
 		for (TimeSlot ts : unavailabilityList) {
 			slots.put(ts.toString(), ts);
+		}
+		return slots;
+	}*/
+	
+	public ArrayList<String> getUnavailabilitySlots() {
+		ArrayList<String> slots = new ArrayList<>();
+		Collections.sort(unavailabilityList); // sort the list
+		for (TimeSlot ts : unavailabilityList) {
+			slots.add(ts.toString());
 		}
 		return slots;
 	}

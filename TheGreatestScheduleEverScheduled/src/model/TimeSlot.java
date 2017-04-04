@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import controller.Database;
 
-public class TimeSlot {
+public class TimeSlot implements Comparable<TimeSlot> {
 	
 	private int day;
 	private int start;
@@ -283,6 +283,11 @@ public class TimeSlot {
 			return 1;
 		else
 			return 0;
+	}
+
+	@Override
+	public int compareTo(TimeSlot o) {
+		return this.day - o.getDay();
 	}
 
 }

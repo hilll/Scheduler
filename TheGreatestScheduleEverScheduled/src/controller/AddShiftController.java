@@ -2,12 +2,11 @@ package controller;
 	import java.io.IOException;
 	import java.io.PrintWriter;
 
-	import javax.servlet.*;
+import javax.servlet.*;
 	import javax.servlet.http.*;
 	import model.*;
 	
-public class AddShiftController {
-
+public class AddShiftController  extends HttpServlet{
 		
 		public void doPost(HttpServletRequest request, HttpServletResponse response)
 				throws ServletException, IOException {

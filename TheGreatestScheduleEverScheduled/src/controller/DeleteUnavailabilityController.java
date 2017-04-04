@@ -6,7 +6,7 @@ package controller;
 	import javax.servlet.http.*;
 	import model.*;
 	
-public class DeleteUnavailabilityController {
+public class DeleteUnavailabilityController extends HttpServlet{
 
 		
 		public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -15,7 +15,7 @@ public class DeleteUnavailabilityController {
 				
 				Employee.getLoggedIn().getAvailability().getUnavailabilitySlots().remove(deleteSlot);
 				Employee.getLoggedIn().getAvailability().save(Employee.getLoggedIn().getID());
-				response.sendRedirect("DeleteUnavailability.jsp");
+				response.sendRedirect("updateUnavailability.jsp");
 
 
 		}

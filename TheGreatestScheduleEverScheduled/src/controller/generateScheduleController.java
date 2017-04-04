@@ -1,5 +1,7 @@
 package controller;
 
-public class generateScheduleController {
+import javax.servlet.http.HttpServlet;
+
+public class generateScheduleController  extends HttpServlet{
 
 }

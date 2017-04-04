@@ -1,5 +1,7 @@
 package controller;
 
-public class DeleteShiftController {
+import javax.servlet.http.HttpServlet;
+
+public class DeleteShiftController  extends HttpServlet{
 
 }

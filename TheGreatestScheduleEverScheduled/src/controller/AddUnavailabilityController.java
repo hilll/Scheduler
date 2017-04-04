@@ -6,7 +6,7 @@ package controller;
 	import javax.servlet.http.*;
 	import model.*;
 	
-public class AddUnavailabilityController {
+public class AddUnavailabilityController extends HttpServlet{
 
 		
 		public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -17,8 +17,8 @@ public class AddUnavailabilityController {
 				//boolean isManager = request.getParameter("employeeTypeSelect").equals("true");
 				
 				Employee.getLoggedIn().getAvailability().updateAvailabilityStrings(day, start, end, '1');
-				Employee.getLoggedIn().getAvailability().save(Employee.getLoggedIn().getID());
-				response.sendRedirect("addUnavailability.jsp");
+				Employee.getLoggedIn().save();
+				response.sendRedirect("updateUnavailability.jsp");
 
 
 		}

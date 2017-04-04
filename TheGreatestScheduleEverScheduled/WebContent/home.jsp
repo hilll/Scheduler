@@ -14,7 +14,7 @@
 <div class="navbar">
 	<h1>The Greatest Schedule Ever Scheduled</h1>
 	<a href="home.jsp">Home</a>
-	<a href="addAvailability.jsp">Add Availability</a>
+	<a href="updateUnavailability.jsp">Add Availability</a>
 	<a href="loginPage.jsp">Logout</a>
 </div>
 <br/>

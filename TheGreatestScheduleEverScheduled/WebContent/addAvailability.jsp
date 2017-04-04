@@ -14,16 +14,18 @@
 </head>
 <body>
 <div class="navbar">
-  <a href="home.jsp">Generate Schedule</a>
-  <a href="updateAvailability.jsp">Update Availability</a>
+	<h1>The Greatest Schedule Ever Scheduled</h1>
+	<a href="home.jsp">Home</a>
+	<a href="deleteUnavailability.jsp">Delete Availability</a>
+	<a href="loginPage.jsp">Logout</a>
 </div>
 <br/>
 <div class="main">
-<h1>Create a new Availability</h1>
+<h1>Create a New Unavailability</h1>
 
-<form method="post" action="createAvailability" id="createAvailabilityForm">
+<form method="post" action="changeAvailability" id="availabilityForm">
 <label>Select a Day</label>
-	<select name="daySelect" form="createAvailabilityForm">
+	<select name="daySelect" form="availabilityForm">
 		<option value = "0">Sunday</option>
 		<option value = "1">Monday</option>
 		<option value = "2">Tuesday</option>
@@ -33,20 +35,39 @@
 		<option value = "6">Saturday</option>
 	</select>
 	<br>
-<label>Start time</label><input type="number" min = "0"  max = "23" name = "start"><br>
-<label>End Time</label><input type="number" min = "0"  max = "23" name = "end"><br>
-<label>Enter the employee type</label>
-	<select name="employeeTypeSelect" form="createAvailabilityForm">
+<label>Start time</label>
+<select name = "start" form="availabilityForm"><br>
+	<% for(int j = 0; j < 96; j++){ %>
+	<option value = "<%= j %>"><%= TimeSlot.intToString(j) %></option>
+	<%} %>
+	</select>
+<label>End Time</label>
+<select name = "end" form="availabilityForm">
+	<% for(int j = 0; j < 96; j++){ %>
+	<option value = "<%= j %>"><%= TimeSlot.intToString(j) %></option>
+	<%} %>
+</select>
+<br>
+<!--  <label>Enter the employee type</label>
+	<select name="employeeTypeSelect" form="availabilityForm">
 		<option value = "false">Employee</option>
 		<option value = "true">Manager</option>
-	</select><br>
+	</select><br>-->
 
 <input type="submit" value ="submit" name = "Create Shift">
 
-<h1> Current Availabilities </h1>
+<h1> Current Unavailabilities </h1>
 <% HashMap<String, TimeSlot> unavailabilities = Employee.getLoggedIn().getAvailability().getUnavailabilitySlots(); 
-	Iterator it = unavailabilities.entrySet().iterator();%>
-<%= %>
+	Iterator it = unavailabilities.entrySet().iterator();
+	int i = 0;
+	while (it.hasNext()) {
+		HashMap.Entry pair = (HashMap.Entry)it.next();
+		i++;
+	
+	%>
+	<%= i + "   " + pair.getKey() %>
+	<br>
+	<% } %>
 </form>
 </div>
 

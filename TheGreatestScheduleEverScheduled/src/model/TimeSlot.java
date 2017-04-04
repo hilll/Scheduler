@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import controller.Database;
 
-public class TimeSlot {
+public class TimeSlot implements Comparable<TimeSlot> {
 	
 	private int day;
 	private int start;
@@ -181,6 +181,32 @@ public class TimeSlot {
 		return result;
 	}
 	
+	public static String intToString(int time) {
+		String result = "";
+		int hours = time / 4;
+		if (hours == 0)
+			result += "12";
+		else if (hours > 12)
+			result += hours - 12;
+		else
+			result += hours;
+		result += ":";
+		int minutes = time % 4;
+		if (minutes == 0)
+			result += "00";
+		else if (minutes == 1)
+			result += "15";
+		else if (minutes == 2)
+			result += "30";
+		else if (minutes == 3)
+			result += "45";
+		if (hours < 12)
+			result += "AM";
+		else
+			result += "PM";
+		return result;
+	}
+	
 	public String toString() {
 		String result = "";
 		if (this.day == 0)
@@ -257,6 +283,11 @@ public class TimeSlot {
 			return 1;
 		else
 			return 0;
+	}
+
+	@Override
+	public int compareTo(TimeSlot o) {
+		return this.day - o.getDay();
 	}
 
 }

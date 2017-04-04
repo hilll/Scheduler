@@ -11,14 +11,16 @@
 </head>
 
 <body>
+
+	<% Employee.setLoggedIn(null); %>
 	<div class="navbar">
 		<h1 style="margin-left: auto; margin-right: auto;">The Greatest Schedule Ever Scheduled <h1><br>
 	</div>
-	<div class="login">
-		<c:if test="!LoginController.getLoginFailed().equals(\"\")"> <%= LoginController.getLoginFailed() %> </c:if>
+	<div class="center">
+		<c:if test="!LoginController.getLoginFailed().equals(\"\")"> <p class="error"><%= LoginController.getLoginFailed() %> </p></c:if>
 		<form method="post" action="login">
-			<input type="text" name="username"><br>
-			<input type="password" name = "password"><br>
+			<label>Username:</label><input type="text" name="username"><br>
+			<label>Password:</label><input type="password" name = "password"><br>
 			<input type="submit" value ="submit" href="employeeHome.jsp">
 		</form>
 	</div>

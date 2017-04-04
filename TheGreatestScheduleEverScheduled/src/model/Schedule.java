@@ -255,6 +255,9 @@ public class Schedule {
 		return allShiftsPool;
 	}
 	
+	/**
+	 * Returns a list of all the shifts in the Schedule as strings.
+	 */
 	public ArrayList<String> getAllShiftsAsStrings() {
 		ArrayList<String> shifts = new ArrayList<>();
 		ArrayList<TimeSlot> allShifts = getAllShiftsPool();
@@ -262,7 +265,6 @@ public class Schedule {
 		for (TimeSlot ts : allShifts) {
 			shifts.add(ts.toString());
 		}
-		Collections.sort(shifts);
 		return shifts;
 	}
 

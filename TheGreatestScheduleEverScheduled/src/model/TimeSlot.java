@@ -6,7 +6,7 @@ import java.util.HashMap;
 import controller.Database;
 
 public class TimeSlot implements Comparable<TimeSlot> {
-	
+
 	private int day;
 	private int start;
 	private int end;
@@ -15,51 +15,51 @@ public class TimeSlot implements Comparable<TimeSlot> {
 	private int employeeID;
 	private int id;
 	private String timeAsString;
-	
+
 	public TimeSlot(int id, String timeAsString, int day, int start, int end, boolean isManagerTimeSlot) {
 		this.id = id;
 		if (timeAsString != null) { // TimeSlot is being loaded from table
 			setStartAndEndFromString(timeAsString);
-		} else { // TimeSlot is being created from scratch and needs to be loaded later
-			this.start=start;
+		} else { // TimeSlot is being created from scratch and needs to be
+					// loaded later
+			this.start = start;
 			this.end = end;
 			setTimeAsString();
 		}
-		if (start < 0 || end >= 96) {
+		if (this.start < 0 || this.end >= 96) {
 			new Exception().printStackTrace(System.out);
-			System.out.println("Indexes are out of bounds for start or end. must be 0-95");
+			System.out.printf("Indexes are out of bounds for start (=%d) or end (=%d) - must be 0-95\n", this.start, this.end);
 		}
 		this.day = day;
 		this.isManagerTimeSlot = isManagerTimeSlot;
-		this.id =id;
+		this.id = id;
 		this.employeeID = -1;
 		if (id != -1)
 			this.saveTimeSlot(id);
 	}
-	
+
 	public static TimeSlot loadFromID(int id, int empID) {
 		String query = "SELECT * FROM " + getTableName() + " WHERE id=" + id;
 		ArrayList<HashMap<String, String>> result = Database.executeSelectQuery(query);
-		if (result.size() == 0)
+		if (result.isEmpty()) {
+			System.err.println("Timeslot with id " + id + " does not exist");
 			return null;
+		}
 		HashMap<String, String> hm = result.get(0);
-		String manager = hm.get("isManager");
-		boolean isManager;
-		if (manager == "1") 
-			isManager = true;
-		else
-			isManager = false;
-		TimeSlot loaded = new TimeSlot(Integer.parseInt(hm.get("id")), hm.get("time"), Integer.parseInt(hm.get("day")), -1, -1, isManager);
+		String manager = hm.get("is_manager");
+		boolean isManager = manager.equals("1");
+		TimeSlot loaded = new TimeSlot(Integer.parseInt(hm.get("id")), hm.get("time"), Integer.parseInt(hm.get("day")),
+				-42, -42, isManager);
 		loaded.setEmployeeID(empID);
 		return loaded;
 	}
-	
+
 	private void setStartAndEndFromString(String timeString) {
 		this.timeAsString = timeString;
 		int start = -1;
 		int end = -1;
 		for (int i = 0; i < timeString.length(); i++) {
-			if (timeString.charAt(i) == 1) {
+			if (timeString.charAt(i) == '1') {
 				if (start == -1)
 					start = i;
 				else
@@ -67,14 +67,14 @@ public class TimeSlot implements Comparable<TimeSlot> {
 			} else {
 				if (start == -1) // haven't found the start of the shift yet
 					continue;
-				else 
+				else
 					end = i - 1;
 			}
 		}
 		this.start = start;
 		this.end = end;
 	}
-	
+
 	private void setTimeAsString() {
 		char[] str = new char[96];
 		for (int i = 0; i < 96; i++) {
@@ -86,75 +86,76 @@ public class TimeSlot implements Comparable<TimeSlot> {
 		}
 		this.timeAsString = String.copyValueOf(str);
 	}
-	
+
 	public static String getTableName() {
 		return "timeslot";
 	}
-	
-	public boolean canFit(TimeSlot that){
-		if(this.start <= that.start && this.end >= that.end && this.getIsManagerTimeSlot() == that.getIsManagerTimeSlot()) {
+
+	public boolean canFit(TimeSlot that) {
+		if (this.start <= that.start && this.end >= that.end
+				&& this.getIsManagerTimeSlot() == that.getIsManagerTimeSlot()) {
 			return true;
 		}
 		return false;
 	}
-	
-	public boolean isEqualByID(TimeSlot that){
-		if(this.id == that.id){
+
+	public boolean isEqualByID(TimeSlot that) {
+		if (this.id == that.id) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	public boolean isEqualByDayAndTimes(TimeSlot that) {
 		if (this.getDay() == that.getDay() && this.getStart() == that.getStart() && this.getEnd() == that.getEnd())
 			return true;
 		return false;
 	}
-	
+
 	public int getDay() {
 		return day;
 	}
-	
+
 	public int getStart() {
 		return start;
 	}
-	
+
 	public int getEnd() {
 		return end;
 	}
-	
+
 	public boolean getIsManagerTimeSlot() {
 		return isManagerTimeSlot;
 	}
-	
+
 	public Employee getEmployee() {
 		return this.emp;
 	}
-	
+
 	public void setEmployee(Employee e) {
 		this.emp = e;
 	}
-	
+
 	public int getEmployeeID() {
 		return employeeID;
 	}
-	
+
 	public void setEmployeeID(int empID) {
 		this.employeeID = empID;
 	}
-	
+
 	public int getID() {
 		return id;
 	}
-	
+
 	public String getTimeAsString() {
 		return this.timeAsString;
 	}
-	
+
 	public static int getNewTimeSlotID() {
 		return Database.getNextIDForTable(getTableName());
 	}
-	
+
 	private String timeToString(int time) {
 		String result = "";
 		int hours = time / 4;
@@ -180,7 +181,7 @@ public class TimeSlot implements Comparable<TimeSlot> {
 			result += "PM";
 		return result;
 	}
-	
+
 	public static String intToString(int time) {
 		String result = "";
 		int hours = time / 4;
@@ -206,7 +207,7 @@ public class TimeSlot implements Comparable<TimeSlot> {
 			result += "PM";
 		return result;
 	}
-	
+
 	public String toString() {
 		String result = "";
 		if (this.day == 0)
@@ -230,13 +231,13 @@ public class TimeSlot implements Comparable<TimeSlot> {
 		result += timeToString(this.end);
 		return result;
 	}
-	
+
 	// delete TimeSlot from DB
 	public boolean delete(int timeSlotID) {
 		return Database.executeManipulateDataQuery(
 				String.format("DELETE FROM `%s`.`%s` WHERE `id`='%d'", Database.getName(), getTableName(), timeSlotID));
 	}
-	
+
 	public static void deleteTS(int timeSlotID) {
 		Database.executeManipulateDataQuery(
 				String.format("DELETE FROM `%s`.`%s` WHERE `id`='%d'", Database.getName(), getTableName(), timeSlotID));
@@ -245,21 +246,23 @@ public class TimeSlot implements Comparable<TimeSlot> {
 	public boolean save(int schedID) {
 		boolean result;
 		if (Database.masterSchedContainsIDPair(schedID, this.getID())) {
-			result = Database.executeManipulateDataQuery(String.format(
-					"UPDATE `%s`.`%s` SET `emp_id`='%d'" + " WHERE `sched_id`=%d AND `timeslot_id`=%d",
-					Database.getName(), Schedule.getMasterScheduleTableName(), this.getEmployeeID(), schedID, this.getID()));
+			result = Database.executeManipulateDataQuery(
+					String.format("UPDATE `%s`.`%s` SET `emp_id`='%d'" + " WHERE `sched_id`=%d AND `timeslot_id`=%d",
+							Database.getName(), Schedule.getMasterScheduleTableName(), this.getEmployeeID(), schedID,
+							this.getID()));
 		} else {
 			// Insert
 			result = Database.executeManipulateDataQuery(String.format(
-					"INSERT INTO `%s`.`%s` " + "(`sched_id`, `timeslot_id`, `emp_id`)"
-							+ " VALUES (%d, %d, %d)",
-							Database.getName(), Schedule.getMasterScheduleTableName(), schedID, this.getID(), this.getEmployeeID()));
+					"INSERT INTO `%s`.`%s` " + "(`sched_id`, `timeslot_id`, `emp_id`)" + " VALUES (%d, %d, %d)",
+					Database.getName(), Schedule.getMasterScheduleTableName(), schedID, this.getID(),
+					this.getEmployeeID()));
 		}
 		return result;
 	}
-	
+
 	// saves the TimeSlot into the timeslot table, if it is not already there.
-	// also will update it if the day, time, or isManager fields change, but this 
+	// also will update it if the day, time, or isManager fields change, but
+	// this
 	// shouldn't really be happening.
 	public boolean saveTimeSlot(int timeSlotID) {
 		boolean result;
@@ -271,13 +274,12 @@ public class TimeSlot implements Comparable<TimeSlot> {
 		} else {
 			// Insert
 			result = Database.executeManipulateDataQuery(String.format(
-					"INSERT INTO `%s`.`%s` " + "(`id`, `day`, `time`, `is_manager`)"
-							+ " VALUES (%d, '%s', '%s', %d)",
-							Database.getName(), getTableName(), timeSlotID, "" + day, timeAsString, getIsManagerAsInt()));
+					"INSERT INTO `%s`.`%s` " + "(`id`, `day`, `time`, `is_manager`)" + " VALUES (%d, '%s', '%s', %d)",
+					Database.getName(), getTableName(), timeSlotID, "" + day, timeAsString, getIsManagerAsInt()));
 		}
 		return result;
 	}
-	
+
 	private int getIsManagerAsInt() {
 		if (this.isManagerTimeSlot)
 			return 1;
@@ -288,6 +290,21 @@ public class TimeSlot implements Comparable<TimeSlot> {
 	@Override
 	public int compareTo(TimeSlot o) {
 		return this.day - o.getDay();
+	}
+
+	@Override
+	public boolean equals(Object v) {
+
+		if (v instanceof TimeSlot) {
+			TimeSlot other = (TimeSlot) v;
+			return other.getDay() == this.getDay() 
+					&& other.getStart() == this.getStart() 
+					&& other.getEnd() == this.getEnd() 
+					&& other.getEmployee().getID() == this.getEmployee().getID()
+					&& other.getIsManagerTimeSlot() == this.getIsManagerTimeSlot();
+		}
+
+		return false;
 	}
 
 }

@@ -21,6 +21,7 @@ public class Employee implements Comparable<Employee> {
 	}
 
 	public static int getIDForLogin(String username, String password) {
+		System.out.printf("Employee.getIdForLogin(): getting ID for username '%s'\n", username);
 		ArrayList<HashMap<String, String>> res = Database.executeSelectQuery(
 				String.format("SELECT emp_id FROM login WHERE username='%s' AND password='%s'", username, password));
 		if (res.isEmpty())
@@ -52,18 +53,21 @@ public class Employee implements Comparable<Employee> {
 	 * returns the Employee object with filled data fields.
 	 */
 	public static Employee loadFromID(int id, Business business) {
+		System.out.println("Employee.loadFromID(): loading from id " + id);
 		String query = "SELECT * FROM " + getTableName() + " WHERE id=" + id;
 		ArrayList<HashMap<String, String>> result = Database.executeSelectQuery(query);
 		if (result.size() == 0)
 			return null;
 		HashMap<String, String> hm = result.get(0);
+		System.out.println("Employee.loadFromID(): loading availability");
 		String[] avail = Availability.loadAvailabilityFromID(id);
 		boolean isManager;
 		if (hm.get("is_manager").equals("1"))
 			isManager = true;
 		else
 			isManager = false;
-		Employee loaded = new Employee(Integer.parseInt(hm.get("id")), hm.get("fname"), hm.get("lname"), hm.get("email"), avail, isManager);
+		Employee loaded = new Employee(id, hm.get("fname"), hm.get("lname"), hm.get("email"), avail, isManager);
+		System.out.println("Employee.loadFromID(): loading business");
 		if (business == null) {
 			Business bus = Business.loadFromID(Integer.parseInt(hm.get("business_id")));
 			bus.addEmployee(loaded);
@@ -95,6 +99,7 @@ public class Employee implements Comparable<Employee> {
 	 * String representation of this Employee's scheduled shifts. 
 	 */
 	private static void setCurrentSchedule(Employee emp) {
+		System.out.println("Employee.setCurrentSchedule(): setting schedule from employee " + emp.getID());
 		ArrayList<ArrayList<TimeSlot>> shiftList = emp.getBusiness().getEmployeesCurrentSchedule(emp.getID());
 		String schedule = "";
 		for (int i = 0; i < 7; i++) {

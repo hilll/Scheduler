@@ -14,7 +14,8 @@
 <div class="navbar">
 	<h1>The Greatest Schedule Ever Scheduled</h1>
 	<a href="home.jsp">Home</a>
-	<a href="updateUnavailability.jsp">Add Availability</a>
+	<a href="updateUnavailability.jsp">Update Un-availabilities</a>
+	<c:if test="Employee.getLoggedIn().getIsManager()"> <a href="updateShifts.jsp">Update Shifts</a></c:if>
 	<a href="loginPage.jsp">Logout</a>
 </div>
 <br/>

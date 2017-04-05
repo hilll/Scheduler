@@ -17,7 +17,8 @@
 <div class="navbar">
 	<h1>The Greatest Schedule Ever Scheduled</h1>
 	<a href="home.jsp">Home</a>
-	<a href="deleteUnavailability.jsp">Delete Availability</a>
+	<a href="updateUnavailability.jsp">Update Un-availabilities</a>
+	<c:if test="Employee.getLoggedIn().getIsManager()"> <a href="updateShifts.jsp">Update Shifts</a></c:if>
 	<a href="loginPage.jsp">Logout</a>
 </div>
 <br/>
@@ -56,6 +57,7 @@
 	</select><br>-->
 
 <input type="submit" value ="submit" name = "Create Shift">
+</form>
 
 <h1> Delete Unavailability </h1>
 <form method="post" action="deleteUnavailability" id="deleteAvailabilityForm">
@@ -63,8 +65,8 @@
 	for (int i = 0; i < unavailabilities.size(); i++) {
 		String u = unavailabilities.get(i);	
 	%>
-	<input type="radio" name="deleteSlot" value="<%=u %>">
-	<%= i + "   " + u %>
+	<input type="checkbox" name="deleteSlot" value="<%=u %>">
+	<%=  u %>
 	<br>
 	<% } %>
 	<br><br>

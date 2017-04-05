@@ -11,9 +11,10 @@ public class DeleteUnavailabilityController extends HttpServlet{
 		
 		public void doPost(HttpServletRequest request, HttpServletResponse response)
 				throws ServletException, IOException {
-				String deleteSlot = request.getParameter("deleteSlot");
-				
-				Employee.getLoggedIn().getAvailability().getUnavailabilitySlots().remove(deleteSlot);
+				String[] deleteSlots = request.getParameterValues("deleteSlot");
+				for( String s : deleteSlots){
+					Employee.getLoggedIn().getAvailability().removeUnavailability(s);
+				}
 				Employee.getLoggedIn().getAvailability().save(Employee.getLoggedIn().getID());
 				response.sendRedirect("updateUnavailability.jsp");
 

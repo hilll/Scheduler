@@ -17,7 +17,7 @@ public class AddShiftController  extends HttpServlet{
 				
 				//*********add the timeslot
 				
-				response.sendRedirect("addShift.jsp");
+				response.sendRedirect("updateShifts.jsp");
 
 
 		}

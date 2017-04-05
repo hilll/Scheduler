@@ -16,7 +16,7 @@ public class AddUnavailabilityController extends HttpServlet{
 				int end = Integer.parseInt(request.getParameter("end"));
 				//boolean isManager = request.getParameter("employeeTypeSelect").equals("true");
 				
-				Employee.getLoggedIn().getAvailability().updateAvailabilityStrings(day, start, end, '1');
+				Employee.getLoggedIn().getAvailability().updateAvailabilityStrings(day, start, end, '0');
 				Employee.getLoggedIn().save();
 				response.sendRedirect("updateUnavailability.jsp");
 

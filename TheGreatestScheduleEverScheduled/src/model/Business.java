@@ -92,15 +92,17 @@ public class Business {
 	 * matching the Business from the Database.
 	 */
 	private static void fillSchedules(Business bus) {
-		String query = "SELECT * FROM " + Schedule.getTableName() + " WHERE id=" + bus.getID();
+		String query = "SELECT * FROM " + Schedule.getTableName() + " WHERE business_id=" + bus.getID();
 		ArrayList<HashMap<String, String>> result = Database.executeSelectQuery(query);
-		if (result.size() == 0)
+		if (result.size() == 0) {
+			System.out.println("Result was 0.");
 			return;
+		}
 		HashMap<String, String> hm;
 		Schedule curr = null;
 		for (int i = 0; i < result.size(); i++) {
 			hm = result.get(i);
-			curr = Schedule.loadFromID(Integer.parseInt(hm.get("business_id")));
+			curr = Schedule.loadFromID(Integer.parseInt(hm.get("id")));
 			if (curr != null) {
 				bus.addToPrevSchedules(curr);
 			}

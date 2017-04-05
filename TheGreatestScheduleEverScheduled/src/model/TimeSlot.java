@@ -25,10 +25,6 @@ public class TimeSlot implements Comparable<TimeSlot> {
 			this.end = end;
 			setTimeAsString();
 		}
-		if (start < 0 || end >= 96) {
-			new Exception().printStackTrace(System.out);
-			System.out.println("Indexes are out of bounds for start or end. must be 0-95");
-		}
 		this.day = day;
 		this.isManagerTimeSlot = isManagerTimeSlot;
 		this.id =id;

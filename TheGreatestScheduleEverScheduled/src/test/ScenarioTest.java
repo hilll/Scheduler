@@ -72,6 +72,21 @@ public class ScenarioTest {
 	}
 	
 	@Test
+	public void loadBusinessAndAddANewSchedule() {
+		Business curr = Business.loadFromID(1);
+		assertEquals(1, curr.getPrevSchedules().size());
+		assertEquals(3, curr.getStaff().size());
+		System.out.println("Printing shifts:");
+		for (String shift : curr.getMasterSchedule().getAllShiftsAsStrings()) {
+			System.out.println(shift);
+		}
+		assertEquals(14, curr.getMasterSchedule().getAllShiftsPool().size());
+		Schedule newSched = curr.getCurrentSchedule();
+		assertTrue(curr.saveCurrentSchedule());
+		curr.save(curr.getID());
+	}
+	
+	@Test
 	public void deleteEverything() {
 		Schedule.delete(0);
 	}

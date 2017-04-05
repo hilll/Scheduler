@@ -150,4 +150,10 @@ public class EmployeeTest {
 		assertEquals(Employee.getIDForLogin("lhill", "lhill"), 3);
 		assertEquals(Employee.getIDForLogin("INVALID", "INVALID"), -1);
 	}
+	
+	@Test
+	public void testHavingBusinessLoadedWhenEmployeeLoads() {
+		Employee ryan = Employee.loadFromID(2, null);
+		assertEquals(0, ryan.getBusiness().getID());
+	}
 }

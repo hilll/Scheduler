@@ -3,6 +3,7 @@
     <%@ page import="model.*" %>
     <%@ page import="java.util.HashMap"%>
     <%@ page import="java.util.Iterator" %>
+    <%@ page import="java.util.ArrayList" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -16,14 +17,15 @@
 <div class="navbar">
 	<h1>The Greatest Schedule Ever Scheduled</h1>
 	<a href="home.jsp">Home</a>
-	<a href="deleteUnavailability.jsp">Delete Availability</a>
+	<a href="updateUnavailability.jsp">Update Un-availabilities</a>
+	<c:if test="Employee.getLoggedIn().getIsManager()"> <a href="updateShifts.jsp">Update Shifts</a></c:if>
 	<a href="loginPage.jsp">Logout</a>
 </div>
 <br/>
 <div class="main">
 <h1>Create a New Unavailability</h1>
 
-<form method="post" action="changeAvailability" id="availabilityForm">
+<form method="post" action=addUnavailability id="availabilityForm">
 <label>Select a Day</label>
 	<select name="daySelect" form="availabilityForm">
 		<option value = "0">Sunday</option>
@@ -55,19 +57,20 @@
 	</select><br>-->
 
 <input type="submit" value ="submit" name = "Create Shift">
+</form>
 
-<h1> Current Unavailabilities </h1>
-<% HashMap<String, TimeSlot> unavailabilities = Employee.getLoggedIn().getAvailability().getUnavailabilitySlots(); 
-	Iterator it = unavailabilities.entrySet().iterator();
-	int i = 0;
-	while (it.hasNext()) {
-		HashMap.Entry pair = (HashMap.Entry)it.next();
-		i++;
-	
+<h1> Delete Unavailability </h1>
+<form method="post" action="deleteUnavailability" id="deleteAvailabilityForm">
+<% ArrayList<String> unavailabilities = Employee.getLoggedIn().getAvailability().getUnavailabilitySlots(); 
+	for (int i = 0; i < unavailabilities.size(); i++) {
+		String u = unavailabilities.get(i);	
 	%>
-	<%= i + "   " + pair.getKey() %>
+	<input type="checkbox" name="deleteSlot" value="<%=u %>">
+	<%=  u %>
 	<br>
 	<% } %>
+	<br><br>
+	<input type="submit" value="Delete Selected Unavailability"></input> 
 </form>
 </div>
 

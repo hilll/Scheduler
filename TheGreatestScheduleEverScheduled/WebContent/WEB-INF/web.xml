@@ -2,7 +2,7 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
   <display-name>TheGreatestScheduleEverScheduled</display-name>
   <welcome-file-list>
-    <welcome-file>login.jsp</welcome-file>
+    <welcome-file>loginPage.jsp</welcome-file>
   </welcome-file-list>
 	
 	<servlet>
@@ -16,13 +16,23 @@
 	</servlet-mapping>
 	
 	<servlet>
-		<servlet-name>AddAvailabilityController</servlet-name>
-		<servlet-class>controller.AddAvailabilityController</servlet-class>
+		<servlet-name>AddUnavailabilityController</servlet-name>
+		<servlet-class>controller.AddUnavailabilityController</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>AddAvailabilityController</servlet-name>
-		<url-pattern>/addAvailability</url-pattern>
+		<servlet-name>AddUnavailabilityController</servlet-name>
+		<url-pattern>/addUnavailability</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>DeleteUnavailabilityController</servlet-name>
+		<servlet-class>controller.DeleteUnavailabilityController</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>DeleteUnavailabilityController</servlet-name>
+		<url-pattern>/deleteUnavailability</url-pattern>
 	</servlet-mapping>
   
 </web-app>

@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-	id="WebApp_ID" version="3.1">
-	<display-name>TheGreatestScheduleEverScheduled</display-name>
-	<welcome-file-list>
-		<welcome-file>loginPage.jsp</welcome-file>
-	</welcome-file-list>
-
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
+  <display-name>TheGreatestScheduleEverScheduled</display-name>
+  <welcome-file-list>
+    <welcome-file>loginPage.jsp</welcome-file>
+  </welcome-file-list>
+	
 	<servlet>
 		<servlet-name>LoginController</servlet-name>
 		<servlet-class>controller.LoginController</servlet-class>
@@ -17,7 +14,7 @@
 		<servlet-name>LoginController</servlet-name>
 		<url-pattern>/login</url-pattern>
 	</servlet-mapping>
-
+	
 	<servlet>
 		<servlet-name>AddUnavailabilityController</servlet-name>
 		<servlet-class>controller.AddUnavailabilityController</servlet-class>
@@ -27,7 +24,7 @@
 		<servlet-name>AddUnavailabilityController</servlet-name>
 		<url-pattern>/addUnavailability</url-pattern>
 	</servlet-mapping>
-
+	
 	<servlet>
 		<servlet-name>DeleteUnavailabilityController</servlet-name>
 		<servlet-class>controller.DeleteUnavailabilityController</servlet-class>
@@ -37,5 +34,35 @@
 		<servlet-name>DeleteUnavailabilityController</servlet-name>
 		<url-pattern>/deleteUnavailability</url-pattern>
 	</servlet-mapping>
+	
+		<servlet>
+		<servlet-name>AddShiftController</servlet-name>
+		<servlet-class>controller.AddShiftController</servlet-class>
+	</servlet>
 
+	<servlet-mapping>
+		<servlet-name>AddShiftController</servlet-name>
+		<url-pattern>/addShift</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>DeleteShiftController</servlet-name>
+		<servlet-class>controller.DeleteShiftController</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>DeleteShiftController</servlet-name>
+		<url-pattern>/deleteShift</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>GenerateScheduleController</servlet-name>
+		<servlet-class>controller.GenerateScheduleController</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>GenerateScheduleController</servlet-name>
+		<url-pattern>/generateSchedule</url-pattern>
+	</servlet-mapping>
+  
 </web-app>

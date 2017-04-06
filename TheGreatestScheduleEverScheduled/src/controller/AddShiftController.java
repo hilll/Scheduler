@@ -16,7 +16,7 @@ public class AddShiftController  extends HttpServlet{
 				boolean managerShift = request.getParameter("employeeTypeSelect").equals("true");
 				
 				//*********add the timeslot
-				
+				Employee.getLoggedIn().getBusiness().createShift(day, start, end, managerShift);
 				response.sendRedirect("updateShifts.jsp");
 
 

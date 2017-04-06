@@ -293,11 +293,10 @@ public class TimeSlot implements Comparable<TimeSlot> {
 
 		if (v instanceof TimeSlot) {
 			TimeSlot other = (TimeSlot) v;
-			return other.getDay() == this.getDay() 
-					&& other.getStart() == this.getStart() 
-					&& other.getEnd() == this.getEnd() 
-					&& other.getEmployee().getID() == this.getEmployee().getID()
-					&& other.getIsManagerTimeSlot() == this.getIsManagerTimeSlot();
+			return other.getDay() == this.getDay() && other.getStart() == this.getStart()
+					&& other.getEnd() == this.getEnd() && other.getEmployee() != null && this.getEmployee() != null
+							? other.getEmployee().getID() == this.getEmployee().getID()
+							: true && other.getIsManagerTimeSlot() == this.getIsManagerTimeSlot();
 		}
 
 		return false;

@@ -17,6 +17,8 @@
 	
 	<% String loggedIn = "Employee Logged in: " + Employee.getLoggedIn().getFullName(); %>
 	<%= loggedIn %>
+
+	
 	<h1>Current Shifts: </h1>
 	<%= Employee.getLoggedIn().getSchedule() %>
 	

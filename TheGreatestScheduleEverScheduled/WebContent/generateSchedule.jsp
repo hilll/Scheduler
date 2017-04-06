@@ -17,7 +17,8 @@
 	
 	
 	<form method="post" action="generateSchedule" id="generateScheduleForm">
-		<input type="submit" name="Generate New Schedule"></input>
+		<label>Generate a New Schedule</label>
+		<input type="submit" value ="submit" name="Generate New Schedule">
 	</form>
 	<%= Employee.getLoggedIn().getBusiness().getMasterSchedule().toString() %>
 

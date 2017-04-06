@@ -46,11 +46,11 @@
 	<%} %>
 </select>
 <br>
-<!--  <label>Enter the employee type</label>
-	<select name="employeeTypeSelect" form="availabilityForm">
+<label>Enter the employee type</label>
+	<select name="employeeTypeSelect" form="shiftForm">
 		<option value = "false">Employee</option>
 		<option value = "true">Manager</option>
-	</select><br>-->
+	</select><br>
 
 <input type="submit" value ="submit" name = "Create Shift">
 </form>

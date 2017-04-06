@@ -94,11 +94,12 @@ public class Employee implements Comparable<Employee> {
 		return this.bus;
 	}
 	
-	/*
-	 * Helper method for loadFromID. Sets this.currentSchedule to the appropriate
-	 * String representation of this Employee's scheduled shifts. 
+	/**
+	 * Sets this.currentSchedule to the appropriate
+	 * String representation of this Employee's scheduled shifts in its Business's 
+	 * master schedule. 
 	 */
-	private static void setCurrentSchedule(Employee emp) {
+	public static void setCurrentSchedule(Employee emp) {
 		System.out.println("Employee.setCurrentSchedule(): setting schedule from employee " + emp.getID());
 		ArrayList<ArrayList<TimeSlot>> shiftList = emp.getBusiness().getEmployeesCurrentSchedule(emp.getID());
 		String schedule = "";

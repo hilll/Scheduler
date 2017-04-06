@@ -11,6 +11,7 @@ import controller.Database;
 import model.Business;
 import model.Employee;
 import model.Schedule;
+import model.TimeSlot;
 
 /*
  * TODO fix bug where every saved timeslot in the master_schedule table has an employee_id of 7
@@ -68,6 +69,15 @@ public class ScenarioTest {
 		Schedule newSched = curr.generateNewSchedule();
 		assertTrue(curr.saveCurrentSchedule());
 		System.out.println(newSched.toString());
+		for (TimeSlot ts : curr.getMasterSchedule().getAllShiftsPool()) {
+			System.out.println("TimeSlot: " + ts.getID() + ", Employee: " + ts.getEmployeeID());
+			assertTrue(ts.getEmployeeID() == 4 || ts.getEmployeeID() == 5 || ts.getEmployeeID() == 6);
+		}
+		for (int i = 0; i < 3; i++) {
+			Employee e = curr.getStaff().get(i);
+			System.out.println(e.getFullName());
+			System.out.println(e.getSchedule());
+		}
 		curr.save(curr.getID());
 	}
 	
@@ -87,8 +97,20 @@ public class ScenarioTest {
 	}
 	
 	@Test
+	public void loadEmployeeAndCheckSched() {
+		Employee Tika = Employee.loadFromID(4, null);
+		Tika.getBusiness().generateNewSchedule();
+		System.out.println(Tika.getSchedule());
+		for (Employee e : Tika.getBusiness().getStaff()) {
+			System.out.println(e.getSchedule());
+		}
+		System.out.println(Tika.getBusiness().getMasterSchedule());
+	}
+	
+	@Test
 	public void deleteEverything() {
-		Schedule.delete(0);
+		for (int i = 7; i < 14; i++)
+			TimeSlot.deleteTS(i);
 	}
 	
 	@Test
@@ -134,6 +156,22 @@ public class ScenarioTest {
 		Business bus = Business.loadFromID(0);
 		emp.setBusiness(bus);
 		emp.save();
+	}
+	
+	@Test
+	public void addKatiesPetsToLoginTable() {
+		boolean result = Database.executeManipulateDataQuery(String.format(
+				"INSERT INTO `%s`.`%s` " + "(`emp_id`, `username`, `password`)"
+						+ " VALUES ('%d', '%s', '%s')",
+				Database.getName(), "login", 4, "Tika", "Tika"));
+		result = Database.executeManipulateDataQuery(String.format(
+				"INSERT INTO `%s`.`%s` " + "(`emp_id`, `username`, `password`)"
+						+ " VALUES ('%d', '%s', '%s')",
+				Database.getName(), "login", 5, "Sam", "Sam"));
+		result = Database.executeManipulateDataQuery(String.format(
+				"INSERT INTO `%s`.`%s` " + "(`emp_id`, `username`, `password`)"
+						+ " VALUES ('%d', '%s', '%s')",
+				Database.getName(), "login", 6, "Leo", "Leo"));
 	}
 
 }

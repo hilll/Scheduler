@@ -149,6 +149,10 @@ public class EmployeeTest {
 		assertEquals(Employee.getIDForLogin("rkaye", "rkaye"), 2);
 		assertEquals(Employee.getIDForLogin("lhill", "lhill"), 3);
 		assertEquals(Employee.getIDForLogin("INVALID", "INVALID"), -1);
+		assertEquals(Employee.getIDForLogin("Tika", "Tika"), 4);
+		assertEquals(Employee.getIDForLogin("Sam", "Sam"), 5);
+		assertEquals(Employee.getIDForLogin("Leo", "Leo"), 6);
+		
 	}
 	
 	@Test

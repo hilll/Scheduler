@@ -130,6 +130,7 @@ public class TimeSlot implements Comparable<TimeSlot> {
 
 	public void setEmployee(Employee e) {
 		this.emp = e;
+		setEmployeeID(e.getID());
 	}
 
 	public int getEmployeeID() {

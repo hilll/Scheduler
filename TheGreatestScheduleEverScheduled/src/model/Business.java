@@ -325,6 +325,10 @@ public class Business {
 	public boolean saveCurrentSchedule() {
 		if (this.getCurrentSchedule() != null) {
 			this.setMasterSchedule(this.getCurrentSchedule());
+			this.getMasterSchedule().save(this.getID());
+			for (Employee e : this.getStaff()) {
+				Employee.setCurrentSchedule(e);
+			}
 			return true;
 		} else {
 			System.out.println("A new schedule has not been generated yet. Doesn't make sense to save it.");
@@ -363,7 +367,7 @@ public class Business {
 							+ " VALUES ('%d', '%s')",
 							Database.getName(), getTableName(), this.getID(), this.getName()));
 		}
-		this.getMasterSchedule().save(businessID);
+		//this.getMasterSchedule().save(businessID);
 
 		return result;
 	}

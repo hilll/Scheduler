@@ -7,6 +7,7 @@ import controller.Database;
 
 public class Employee implements Comparable<Employee> {
 	
+	//private static Employee loggedIn = Employee.loadFromID(Employee.getIDForLogin("rkaye", "rkaye"), null);
 	private static Employee loggedIn;
 	private int empID;
 	private String fullName, fname, lname, email = "placeholder_email";

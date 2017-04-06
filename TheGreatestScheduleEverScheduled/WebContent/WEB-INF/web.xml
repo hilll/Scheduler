@@ -34,5 +34,35 @@
 		<servlet-name>DeleteUnavailabilityController</servlet-name>
 		<url-pattern>/deleteUnavailability</url-pattern>
 	</servlet-mapping>
+	
+		<servlet>
+		<servlet-name>AddShiftController</servlet-name>
+		<servlet-class>controller.AddShiftController</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>AddShiftController</servlet-name>
+		<url-pattern>/addShift</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>DeleteShiftController</servlet-name>
+		<servlet-class>controller.DeleteShiftController</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>DeleteShiftController</servlet-name>
+		<url-pattern>/deleteShift</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>GenerateScheduleController</servlet-name>
+		<servlet-class>controller.GenerateScheduleController</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>GenerateScheduleController</servlet-name>
+		<url-pattern>/generateSchedule</url-pattern>
+	</servlet-mapping>
   
 </web-app>

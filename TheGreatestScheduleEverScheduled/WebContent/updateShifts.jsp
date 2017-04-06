@@ -4,6 +4,8 @@
     <%@ page import="java.util.HashMap"%>
     <%@ page import="java.util.Iterator" %>
     <%@ page import="java.util.ArrayList" %>
+    <%@ page import="controller.Navbar" %>
+    
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -13,18 +15,13 @@
 
 </head>
 <body>
-<div class="navbar">
-	<h1>The Greatest Schedule Ever Scheduled</h1>
-	<a href="home.jsp">Home</a>
-	<a href="updateUnavailability.jsp">Update Un-availabilities</a>
-	<c:if test="Employee.getLoggedIn().getIsManager()"> <a href="updateShifts.jsp">Update Shifts</a></c:if>
-	<a href="loginPage.jsp">Logout</a>
-</div>
+<%= Navbar.navbar %>
+
 <br/>
 <div class="main">
 <h1>Create a New Shift</h1>
 
-<form method="post" action=addShift id="shiftForm">
+<form method="post" action="addShift" id="shiftForm">
 <label>Select a Day</label>
 	<select name="daySelect" form="shiftForm">
 		<option value = "0">Sunday</option>

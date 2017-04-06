@@ -19,8 +19,7 @@ import controller.Database;
  */
 public class Availability {
 
-	// When a new employee is created, its availability is auto-set to this to
-	// start with
+	// When a new employee is created, its availability is auto-set to this to start with
 	private final String[] starterAvailability = {
 			"111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
 			"111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",

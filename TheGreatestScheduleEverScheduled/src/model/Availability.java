@@ -164,27 +164,40 @@ public class Availability {
 	 * Should only be called from fillUnavailabilityAndAvailabilitiesByDay
 	 * method. It can't be used to change an Employee's unavailability, because
 	 * it does not update availabilityStrings and thus won't be saved in the
-	 * database when the Employee logs out.
+	 * database when the Employee logs out. Before adding a TimeSlot, it checks
+	 * to make sure the list doesn't contain the same slot (day, start, end time)
+	 * because this method can be called to update an entire day after only one 
+	 * small change. Can't just ask if it contains slot, because all availability-
+	 * related slots have the same id: -1.
 	 */
 	private void addUnavailability(int day, int start, int end) {
 		TimeSlot slot = new TimeSlot(-1, null, day, start, end, isManager);
-		//if (!unavailabilityList.contains(slot)) {
-			System.out.printf("addUnavailability(): %s\n", slot.toString());
-			unavailabilityList.add(slot);
-			availabilityHash.put(slot.toString(), slot);
-		//}
+		for (TimeSlot s : unavailabilityList) {
+			if (s.isEqualByDayAndTimes(slot))
+				return;
+		}
+		System.out.printf("addUnavailability(): %s\n", slot.toString());
+		unavailabilityList.add(slot);
+		availabilityHash.put(slot.toString(), slot);
 	}
 
 	/*
 	 * Should only be called from fillUnavailabilityAndAvailabilitiesByDay
 	 * method. It can't be used to change an Employee's availability, because it
 	 * does not update availabilityStrings and thus won't be saved in the
-	 * database when the Employee logs out.
+	 * database when the Employee logs out. Before adding a TimeSlot, it checks
+	 * to make sure the list doesn't contain the same slot (day, start, end time)
+	 * because this method can be called to update an entire day after only one
+	 * small change. Can't just ask if it contains slot, because all availability-
+	 * related slots have the same id: -1.
 	 */
 	private void addAvailability(int day, int start, int end) {
 		TimeSlot slot = new TimeSlot(-1, null, day, start, end, isManager);
-		//if (!this.availabilityByDay.get(day).contains(slot))
-			this.availabilityByDay.get(day).add(slot);
+		for (TimeSlot s : availabilityByDay.get(day)) {
+			if (s.isEqualByDayAndTimes(slot))
+				return;
+		}
+		this.availabilityByDay.get(day).add(slot);
 	}
 
 	/**

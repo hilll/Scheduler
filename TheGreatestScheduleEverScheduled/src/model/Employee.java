@@ -34,6 +34,7 @@ public class Employee implements Comparable<Employee> {
 	 * If you are creating a brand new employee, use -1 for id. You also need to set the business.
 	 */
 	public Employee(int id, String fname, String lname, String email, String[] avail, boolean isManager) {
+		System.out.println("Employee: constructing " + fname);
 		if (id == -1) {
 			id = Database.getNextIDForTable(getTableName()); 
 			if (id < 0) { 

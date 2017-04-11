@@ -84,7 +84,7 @@ public class ScenarioTest {
 	@Test
 	public void loadBusinessAndAddANewSchedule() {
 		Business curr = Business.loadFromID(1);
-		assertEquals(1, curr.getPrevSchedules().size());
+		assertEquals(2, curr.getPrevSchedules().size());
 		assertEquals(3, curr.getStaff().size());
 		System.out.println("Printing shifts:");
 		for (String shift : curr.getMasterSchedule().getAllShiftsAsStrings()) {

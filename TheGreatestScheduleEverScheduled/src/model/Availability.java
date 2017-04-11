@@ -168,11 +168,11 @@ public class Availability {
 	 */
 	private void addUnavailability(int day, int start, int end) {
 		TimeSlot slot = new TimeSlot(-1, null, day, start, end, isManager);
-		if (!unavailabilityList.contains(slot)) {
+		//if (!unavailabilityList.contains(slot)) {
 			System.out.printf("addUnavailability(): %s\n", slot.toString());
 			unavailabilityList.add(slot);
 			availabilityHash.put(slot.toString(), slot);
-		}
+		//}
 	}
 
 	/*
@@ -183,7 +183,7 @@ public class Availability {
 	 */
 	private void addAvailability(int day, int start, int end) {
 		TimeSlot slot = new TimeSlot(-1, null, day, start, end, isManager);
-		if (!this.availabilityByDay.get(day).contains(slot))
+		//if (!this.availabilityByDay.get(day).contains(slot))
 			this.availabilityByDay.get(day).add(slot);
 	}
 

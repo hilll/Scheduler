@@ -128,23 +128,25 @@ public class Business {
 	 */
 	public Schedule generateNewSchedule() {
 		
+		this.getMasterSchedule().fillCompanyPool();
 		Schedule newSchedule = new Schedule();
 		newSchedule.copyAllShiftsPool(getMasterSchedule());
 		
-		//Initialize employee block pools
+		//Initialize employee availability pools
 		initializeStaffPools();
 		
 		int numBlocks = getMasterSchedule().getAllShiftsPool().size();
 		
-		// Couldn't get this to work - maybe Levi can take another look to get the TMA working again.
-		/*int numRounds = 0;
+		int numRounds = 0;
 		while(numBlocks > 0 && numRounds < (getMasterSchedule().getAllShiftsPool().size())) { //-this.staff.size())) { //START TMA
 			for(Employee emp : staff){
 				if(numRounds < emp.getAvailability().getAvailabilityPool().size()) {
 					TimeSlot empChoice = emp.getAvailability().getAvailabilityPool().get(numRounds);
 					TimeSlot shift = newSchedule.getTimeBlock(empChoice);
-					if(shift.getEmployeeID() == -1){
+					if(shift.getEmployeeID() == 7){
+						System.out.println("Inside the if shift.getEmpID == 7 block");
 						shift.setEmployeeID(emp.getID());
+						shift.setEmployee(emp);
 						numBlocks--;
 					}
 				}
@@ -154,18 +156,6 @@ public class Business {
 		
 		if(numBlocks != 0){
 			System.out.println("SOME SHIFTS LEFT OPEN");
-		}*/
-		
-		// overly simplified placeholder "algorithm"
-		for (int i = 0; i < numBlocks; i++) {
-			TimeSlot ts = getMasterSchedule().getAllShiftsPool().get(i);
-			for (Employee emp : staff) {
-				if (emp.getAvailability().getAvailabilityPool().contains(ts)) {
-					if (ts.getEmployee() == null) {
-						ts.setEmployee(emp);
-					}
-				}
-			}
 		}
 		
 		//Fill TimeBlock

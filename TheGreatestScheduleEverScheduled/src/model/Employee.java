@@ -55,6 +55,7 @@ public class Employee implements Comparable<Employee> {
 	 * returns the Employee object with filled data fields.
 	 */
 	public static Employee loadFromID(int id, Business business) {
+		Database.beginPersistentConnection();
 		System.out.println("Employee.loadFromID(): loading from id " + id);
 		String query = "SELECT * FROM " + getTableName() + " WHERE id=" + id;
 		ArrayList<HashMap<String, String>> result = Database.executeSelectQuery(query);
@@ -78,6 +79,7 @@ public class Employee implements Comparable<Employee> {
 			loaded.setBusiness(business);
 		}
 		setCurrentSchedule(loaded);
+		Database.endPersistentConnection();
 		return loaded;
 	}
 

@@ -16,18 +16,23 @@ import model.Schedule;
 public class Database {
 
 	public static String dbName = "ccdb";
+	public static Connection conn = null;
+	private static boolean persistConnection = false;
 
 	public static void main(String args[]) {
-		
+
+		// TODO move all this to test file
+
 		Business forTesting = Business.loadFromID(0);
-		
+
 		// a little test to see how things work
 		ArrayList<HashMap<String, String>> data = executeSelectQuery("SELECT * FROM " + Employee.getTableName());
 		System.out.println("Data in employee table: ");
 		printData(data);
 		System.out.println();
-		
-		ArrayList<HashMap<String, String>> availData = executeSelectQuery("SELECT * FROM " + Availability.getTableName());
+
+		ArrayList<HashMap<String, String>> availData = executeSelectQuery(
+				"SELECT * FROM " + Availability.getTableName());
 		System.out.println("Data in availability table: ");
 		printData(availData);
 		System.out.println();
@@ -37,18 +42,20 @@ public class Database {
 		System.out.println();
 
 		// adding a new employee to the DB
-		//Employee e = new Employee(getNextIDForTable(Employee.getTableName()), "Test", "Person", "email", null, false);
+		// Employee e = new Employee(getNextIDForTable(Employee.getTableName()),
+		// "Test", "Person", "email", null, false);
 		Employee e = new Employee(-1, "Test", "Person", "email", null, false);
 		e.setBusiness(forTesting);
 		System.out.println("Inserting new Employee: " + e.getFullName());
 		e.save();
-		
+
 		System.out.println("Data in employee table: ");
 		data = executeSelectQuery("SELECT * FROM " + Employee.getTableName());
 		printData(data);
 		System.out.println();
-		
-		ArrayList<HashMap<String, String>> availDataAfterTestPerson = executeSelectQuery("SELECT * FROM " + Availability.getTableName());
+
+		ArrayList<HashMap<String, String>> availDataAfterTestPerson = executeSelectQuery(
+				"SELECT * FROM " + Availability.getTableName());
 		System.out.println("Data in availability table: ");
 		printData(availDataAfterTestPerson);
 		System.out.println();
@@ -56,13 +63,14 @@ public class Database {
 		// delete the employee, because we don't Test Person >:O!
 		System.out.println("Deleting " + e.getFullName() + "...");
 		e.delete();
-		
+
 		System.out.println("Data in employee table: ");
 		data = executeSelectQuery("SELECT * FROM " + Employee.getTableName());
 		printData(data);
 		System.out.println();
-		
-		ArrayList<HashMap<String, String>> availDataAfterDeletingTestPerson = executeSelectQuery("SELECT * FROM " + Availability.getTableName());
+
+		ArrayList<HashMap<String, String>> availDataAfterDeletingTestPerson = executeSelectQuery(
+				"SELECT * FROM " + Availability.getTableName());
 		System.out.println("Data in availability table: ");
 		printData(availDataAfterDeletingTestPerson);
 		System.out.println();
@@ -72,7 +80,7 @@ public class Database {
 		System.out.println("Availability test:");
 		data = executeSelectQuery("SELECT * FROM availability WHERE emp_id = 1");
 		printData(data);
-		
+
 		// UPDATE test - id 0 already exists in DB
 		System.out.println("Update test:");
 		System.out.println("BEFORE:");
@@ -121,12 +129,12 @@ public class Database {
 	// returns if/if not a successful execution
 	// use this for UPDATE/INSERT/DELETE
 	public static boolean executeManipulateDataQuery(String query) {
-		Connection con = getConnection();
+		startConnection();
 		boolean success = false;
 		try {
-			Statement statement = con.createStatement();
+			Statement statement = conn.createStatement();
 			success = statement.execute(query);
-			con.close();
+			if (!persistConnection) conn.close();
 		} catch (SQLException e) {
 			System.err.println("SQLException with query: " + query);
 			e.printStackTrace();
@@ -137,14 +145,14 @@ public class Database {
 	// Use only for SELECTs
 	// Converts ResultSet to a consistently accessible ArrayList<String[]>
 	public static ArrayList<HashMap<String, String>> executeSelectQuery(String query) {
-		Connection con = getConnection();
+		startConnection();
 		try {
-			Statement statement = con.createStatement();
+			Statement statement = conn.createStatement();
 			ResultSet rs = statement.executeQuery(query);
 			ResultSetMetaData metadata = rs.getMetaData();
 			ArrayList<HashMap<String, String>> data = new ArrayList<>();
 
-			// save all the records into the arraylist
+			// save all the records into the ArrayList
 			// each record is a mapping from attribute name => value
 			while (rs.next()) {
 				HashMap<String, String> record = new HashMap<>();
@@ -153,7 +161,7 @@ public class Database {
 				}
 				data.add(record);
 			}
-			con.close();
+			if (!persistConnection) conn.close();
 			return data;
 		} catch (SQLException e) {
 			System.err.println("SQLException with query: " + query);
@@ -162,21 +170,44 @@ public class Database {
 		}
 	}
 
-	private static Connection getConnection() {
-		Connection con = null;
+	private static void startConnection() {
 		try {
+			if (conn != null && !conn.isClosed()) {
+				return; // already connected
+			}
 			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection(
+			conn = DriverManager.getConnection(
 					"jdbc:mysql://ccdbinstance.cu5co55mqa04.us-west-2.rds.amazonaws.com:3306/ccdb", "username",
 					"password");
 		} catch (Exception e) {
 			System.err.println("Connection with DB could not be established");
 			e.printStackTrace();
 		}
-		return con;
+	}
+	
+	public static void beginPersistentConnection() {
+		startConnection();
+		persistConnection = true;
 	}
 
-	// check if a certain table already contains an id (check for if you want to UPDATE or INSERT)
+	public static void endPersistentConnection() {
+		stopConnection();
+		persistConnection = false;
+	}
+	
+	public static void stopConnection() {
+		try {
+			if (conn != null && !conn.isClosed()) {
+				conn.close();
+			}
+		} catch (SQLException e) {
+			System.err.println("Could not close connection to Database");
+			e.printStackTrace();
+		}
+	}
+
+	// check if a certain table already contains an id (check for if you want to
+	// UPDATE or INSERT)
 	public static boolean tableContainsID(String tableName, int id) {
 		ArrayList<HashMap<String, String>> res;
 		if (tableName.equals(Availability.getTableName())) {
@@ -191,10 +222,11 @@ public class Database {
 		}
 		return true;
 	}
-	
+
 	public static boolean masterSchedContainsIDPair(int schedID, int timeSlotID) {
 		ArrayList<HashMap<String, String>> res = executeSelectQuery(
-				String.format("SELECT * FROM `%s`.`%s` WHERE sched_id = %d AND timeslot_id = %d", Database.getName(), Schedule.getMasterScheduleTableName(), schedID, timeSlotID));
+				String.format("SELECT * FROM `%s`.`%s` WHERE sched_id = %d AND timeslot_id = %d", Database.getName(),
+						Schedule.getMasterScheduleTableName(), schedID, timeSlotID));
 		if (res.isEmpty())
 			return false;
 		return true;

@@ -192,61 +192,61 @@ public class Schedule {
 	}
 	
 	
-//	/**
-//	 * Prints out a textual representation of this Schedule.
-//	 */
-//	public void printSchedule(){	
-//		
-//		System.out.println("\t| 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95");
-//		String dash = "========================================================================================================================================================================================================================================================================================================";
-//		System.out.println( dash);
-//		String[] days = {"Sun\t","Mon\t", "Tues\t", "Wed\t", "Thur\t", "Fri\t", "Sat\t"};
-//		for(int i = 0; i < days.length; i++){
-//			
-//			//Print day name if first time block, else aline with header
-//			boolean firstBlock = true;
-//			for(int block = 0; block < this.shiftsByDay.get(i).size(); block++){
-//				if(firstBlock){
-//					System.out.print(days[i]+"|");
-//					
-//					firstBlock = false;
-//				}
-//				else{
-//					System.out.print("\t|");
-//				}
-//				
-//				boolean inBlock= false;
-//				for(int c = 0 ; c < 75; c+=3){
-//					if(this.shiftsByDay.get(i).get(block).getStart() == (c/3)){
-//						System.out.print("|");
-//						
-//						if(this.shiftsByDay.get(i).get(block).getEmployeeID() != -1){
-//							String name = this.shiftsByDay.get(i).get(block).getEmployee().getFullName() + "----------";
-//							System.out.print(name.substring(0, 8));
-//						}
-//						else
-//							System.out.printf("id=%2d---", this.shiftsByDay.get(i).get(block).getID());
-//						c+=8;
-//						inBlock = true;
-//					}
-//					if(this.shiftsByDay.get(i).get(block).getEnd() == (c/3)+1){
-//						System.out.print("|\n");
-//						inBlock = false;
-//						break;
-//					}
-//					if(inBlock){
-//						System.out.print("---");
-//					}
-//					else{
-//						System.out.print("   ");
-//					}
-//				}
-//				
-//			}
-//			System.out.println( dash);
-//		}
-//		System.out.println();
-//	}
+	/**
+	 * Prints out a textual representation of this Schedule.
+	 */
+	public void printSchedule(){	
+		
+		System.out.println("\t| 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95");
+		String dash = "========================================================================================================================================================================================================================================================================================================";
+		System.out.println( dash);
+		String[] days = {"Sun\t","Mon\t", "Tues\t", "Wed\t", "Thur\t", "Fri\t", "Sat\t"};
+		for(int i = 0; i < days.length; i++){
+			
+			//Print day name if first time block, else aline with header
+			boolean firstBlock = true;
+			for(int block = 0; block < this.shiftsByDay.get(i).size(); block++){
+				if(firstBlock){
+					System.out.print(days[i]+"|");
+					
+					firstBlock = false;
+				}
+				else{
+					System.out.print("\t|");
+				}
+				
+				boolean inBlock= false;
+				for(int c = 0 ; c < 75*4; c+=3){
+					if(this.shiftsByDay.get(i).get(block).getStart() == (c/3)){
+						System.out.print("|");
+						
+						if(this.shiftsByDay.get(i).get(block).getEmployeeID() != -1){
+							String name = this.shiftsByDay.get(i).get(block).getEmployee().getFullName() + "----------";
+							System.out.print(name.substring(0, 8));
+						}
+						else
+							System.out.printf("id=%2d---", this.shiftsByDay.get(i).get(block).getID());
+						c+=8;
+						inBlock = true;
+					}
+					if(this.shiftsByDay.get(i).get(block).getEnd() == (c/3)+1){
+						System.out.print("|\n");
+						inBlock = false;
+						break;
+					}
+					if(inBlock){
+						System.out.print("---");
+					}
+					else{
+						System.out.print("   ");
+					}
+				}
+				
+			}
+			System.out.println( dash);
+		}
+		System.out.println();
+	}
 
 	/**
 	 * Returns the allShiftsPool from this Schedule.

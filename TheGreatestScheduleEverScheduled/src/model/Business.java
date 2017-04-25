@@ -127,6 +127,12 @@ public class Business {
 	 * the shifts from the masterSchedule using this Business's staff's availability.
 	 */
 	public Schedule generateNewSchedule() {
+		if (Employee.getLoggedIn().getIsManager()) {
+			System.out.println(Employee.getLoggedIn().getFullName() + " is a manager, so they can generate a new schedule.");
+		} else {
+			System.out.println(Employee.getLoggedIn().getFullName() + " is not a manager, so they can't generate a new schedule.");
+			return null;
+		}
 		
 		this.getMasterSchedule().fillCompanyPool();
 		Schedule newSchedule = new Schedule();
@@ -163,6 +169,10 @@ public class Business {
 		
 		//Make it the new current schedule
 		this.currentSchedule = newSchedule;
+		
+		System.out.println("For now, every time a new schedule is generated, we're saving it at the end of Busness.generateNewSchedule.");
+		System.out.println("To avoid this, we would need to add a button to webpage for manager to decide when to save.");
+		this.saveCurrentSchedule();
 		
 		return newSchedule;
 	}

@@ -224,6 +224,22 @@ public class Business {
 	}
 	
 	/**
+	 * Removes the shift (TimeBlock) whose toString matches slotAsString from the master schedule's
+	 * block pool. Side effect: saves the changed schedule to the database.
+	 */
+	public void removeShift(String slotAsString) {
+		if (Employee.getLoggedIn().getIsManager()) {
+			System.out.println(Employee.getLoggedIn().getFullName() + " is a manager, so the shift will be deleted.");
+		} else {
+			System.out.println(Employee.getLoggedIn().getFullName() + " is not a manager, so they are unable to delete a shift from the schedule.");
+			return;
+		}
+		getMasterSchedule().removeTimeBlock(slotAsString);
+		getMasterSchedule().fillCompanyPool();
+		getMasterSchedule().save(this.getID());
+	}	
+	
+	/**
 	 * Adds the given Employee to this Business's staff.
 	 */
 	public void addEmployee(Employee emp) {

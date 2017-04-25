@@ -108,6 +108,7 @@ public class Schedule {
 		for(int day = 0; day < 7; day++){
 			for(int i = 0 ; i < this.shiftsByDay.get(day).size(); i++){
 				if(this.shiftsByDay.get(day).get(i).getID() == slotID){
+					TimeSlot.deleteTSFromSchedule(slotID, this.getID());
 					this.shiftsByDay.get(day).remove(i);
 					return true;
 				}
@@ -267,6 +268,23 @@ public class Schedule {
 			shifts.add(ts.toString());
 		}
 		return shifts;
+	}
+	
+	/**
+	 * Removes a shift whose toString matches the string passed as a parameter. Returns 
+	 * true if such a shift is found and removed, false otherwise.
+	 */
+	public boolean removeTimeBlock(String shiftAsString) {
+		for(int day = 0; day < 7; day++){
+			for(int i = 0 ; i < this.shiftsByDay.get(day).size(); i++){
+				if(this.shiftsByDay.get(day).get(i).toString().equals(shiftAsString)) {
+					TimeSlot.deleteTSFromSchedule(this.shiftsByDay.get(day).get(i).getID(), this.getID());
+					this.shiftsByDay.get(day).remove(i);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

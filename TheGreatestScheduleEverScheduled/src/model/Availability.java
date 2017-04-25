@@ -300,7 +300,7 @@ public class Availability {
 	}
 
 	/**
-	 * Returns the Employee's availabilityStrings.
+	 * Returns the Employee's availabilityStrings. 0s are unavailabilities, 1s are availabilities.
 	 */
 	public String[] getAvailabilityStrings() {
 		return availabilityStrings;

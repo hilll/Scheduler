@@ -83,6 +83,7 @@ public class Schedule {
 	 * loading from the database.
 	 */
 	public void addShift(TimeSlot slot) {
+		System.out.println("This should not be called to add a new shift to the schedule.");
 		shiftsByDay.get(slot.getDay()).add(slot);
 		allShiftsPool.add(slot);
 	}

@@ -186,6 +186,12 @@ public class Business {
 	 * parameters.
 	 */
 	public void createShift(int day, int start, int end, boolean isManager){
+		if (Employee.getLoggedIn().getIsManager()) {
+			System.out.println(Employee.getLoggedIn().getFullName() + " is a manager, so the shift will be added.");
+		} else {
+			System.out.println(Employee.getLoggedIn().getFullName() + " is not a manager, so they are unable to add a shift to the schedule.");
+			return;
+		}
 		getMasterSchedule().addTimeBlock(day, start, end, isManager, null);
 		getMasterSchedule().fillCompanyPool();
 	}
@@ -195,6 +201,12 @@ public class Business {
 	 * block pool. 
 	 */
 	public void removeShift(int slotID) {
+		if (Employee.getLoggedIn().getIsManager()) {
+			System.out.println(Employee.getLoggedIn().getFullName() + " is a manager, so the shift will be deleted.");
+		} else {
+			System.out.println(Employee.getLoggedIn().getFullName() + " is not a manager, so they are unable to delete a shift from the schedule.");
+			return;
+		}
 		getMasterSchedule().removeTimeBlock(slotID);
 		getMasterSchedule().fillCompanyPool();
 	}

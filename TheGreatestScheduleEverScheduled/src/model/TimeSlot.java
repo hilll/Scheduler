@@ -228,6 +228,15 @@ public class TimeSlot implements Comparable<TimeSlot> {
 		result += timeToString(this.end);
 		return result;
 	}
+	
+	/**
+	 * Please don't delete/overwrite this method. Deletes a timeslot from a particular schedule.
+	 */
+	public static void deleteTSFromSchedule(int timeSlotID, int schedID) {
+		Database.executeManipulateDataQuery(
+				String.format("DELETE FROM `%s`.`%s` WHERE (`sched_id`=%d AND `timeslot_id`=%d)", Database.getName(),
+						Schedule.getMasterScheduleTableName(), schedID, timeSlotID));
+	}
 
 	// delete TimeSlot from DB
 	public boolean delete(int timeSlotID) {

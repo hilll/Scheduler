@@ -15,6 +15,7 @@ public class DeleteShiftController  extends HttpServlet{
 			String[] deleteSlots = request.getParameterValues("deleteSlot");
 			for(String s : deleteSlots){
 				//TODO: delete shift
+				Employee.getLoggedIn().getBusiness().removeShift(s);
 			}
 			//TODO: save
 			response.sendRedirect("updateShifts.jsp");

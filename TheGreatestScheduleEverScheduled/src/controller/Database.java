@@ -19,82 +19,6 @@ public class Database {
 	public static Connection conn = null;
 	private static boolean persistConnection = false;
 
-	public static void main(String args[]) {
-
-		// TODO move all this to test file
-
-		Business forTesting = Business.loadFromID(0);
-
-		// a little test to see how things work
-		ArrayList<HashMap<String, String>> data = executeSelectQuery("SELECT * FROM " + Employee.getTableName());
-		System.out.println("Data in employee table: ");
-		printData(data);
-		System.out.println();
-
-		ArrayList<HashMap<String, String>> availData = executeSelectQuery(
-				"SELECT * FROM " + Availability.getTableName());
-		System.out.println("Data in availability table: ");
-		printData(availData);
-		System.out.println();
-
-		// to get the next ID to use for some table
-		System.out.println("Next new employee will have ID of: " + getNextIDForTable(Employee.getTableName()));
-		System.out.println();
-
-		// adding a new employee to the DB
-		// Employee e = new Employee(getNextIDForTable(Employee.getTableName()),
-		// "Test", "Person", "email", null, false);
-		Employee e = new Employee(-1, "Test", "Person", "email", null, false);
-		e.setBusiness(forTesting);
-		System.out.println("Inserting new Employee: " + e.getFullName());
-		e.save();
-
-		System.out.println("Data in employee table: ");
-		data = executeSelectQuery("SELECT * FROM " + Employee.getTableName());
-		printData(data);
-		System.out.println();
-
-		ArrayList<HashMap<String, String>> availDataAfterTestPerson = executeSelectQuery(
-				"SELECT * FROM " + Availability.getTableName());
-		System.out.println("Data in availability table: ");
-		printData(availDataAfterTestPerson);
-		System.out.println();
-
-		// delete the employee, because we don't Test Person >:O!
-		System.out.println("Deleting " + e.getFullName() + "...");
-		e.delete();
-
-		System.out.println("Data in employee table: ");
-		data = executeSelectQuery("SELECT * FROM " + Employee.getTableName());
-		printData(data);
-		System.out.println();
-
-		ArrayList<HashMap<String, String>> availDataAfterDeletingTestPerson = executeSelectQuery(
-				"SELECT * FROM " + Availability.getTableName());
-		System.out.println("Data in availability table: ");
-		printData(availDataAfterDeletingTestPerson);
-		System.out.println();
-
-		// see the availability format for an employee - I only added data for
-		// myself (emp_id=1) for now
-		System.out.println("Availability test:");
-		data = executeSelectQuery("SELECT * FROM availability WHERE emp_id = 1");
-		printData(data);
-
-		// UPDATE test - id 0 already exists in DB
-		System.out.println("Update test:");
-		System.out.println("BEFORE:");
-		data = executeSelectQuery("SELECT * FROM employee WHERE id = 0");
-		printData(data);
-		Employee updateEmp = new Employee(0, "poop", "White", "pooping", null, false);
-		updateEmp.save();
-		System.out.println("AFTER:");
-		data = executeSelectQuery("SELECT * FROM employee WHERE id = 0");
-		printData(data);
-		Employee resetEmp = new Employee(0, "Sarina", "White", "sarinarw@email.arizona.edu", null, false);
-		resetEmp.save();
-	}
-
 	// * can be used to print the returned DB data from executeSelectQuery()
 	// * mainly for testing - making sure your SELECT query is getting the right
 	// output
@@ -130,12 +54,13 @@ public class Database {
 	// use this for UPDATE/INSERT/DELETE
 	public static boolean executeManipulateDataQuery(String query) {
 		startConnection();
-		boolean success = false;
+		boolean success = true;
 		try {
 			Statement statement = conn.createStatement();
-			success = statement.execute(query);
+			statement.execute(query); 
 			if (!persistConnection) conn.close();
 		} catch (SQLException e) {
+			success = false;
 			System.err.println("SQLException with query: " + query);
 			e.printStackTrace();
 		}
@@ -217,18 +142,13 @@ public class Database {
 			res = executeSelectQuery(
 					String.format("SELECT * FROM `%s`.`%s` WHERE id = %d", Database.getName(), tableName, id));
 		}
-		if (res.isEmpty()) {
-			return false;
-		}
-		return true;
+		return res != null && !res.isEmpty();
 	}
 
 	public static boolean masterSchedContainsIDPair(int schedID, int timeSlotID) {
 		ArrayList<HashMap<String, String>> res = executeSelectQuery(
 				String.format("SELECT * FROM `%s`.`%s` WHERE sched_id = %d AND timeslot_id = %d", Database.getName(),
 						Schedule.getMasterScheduleTableName(), schedID, timeSlotID));
-		if (res.isEmpty())
-			return false;
-		return true;
+		return res != null && !res.isEmpty();
 	}
 }

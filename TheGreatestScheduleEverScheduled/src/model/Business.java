@@ -183,7 +183,7 @@ public class Business {
 
 	/**
 	 * Create a new shift (TimeSlot) in the master schedule with the given 
-	 * parameters.
+	 * parameters. Side effect: saves the changed schedule to the database.
 	 */
 	public void createShift(int day, int start, int end, boolean isManager){
 		if (Employee.getLoggedIn().getIsManager()) {
@@ -194,11 +194,12 @@ public class Business {
 		}
 		getMasterSchedule().addTimeBlock(day, start, end, isManager, null);
 		getMasterSchedule().fillCompanyPool();
+		getMasterSchedule().save(this.getID());
 	}
 
 	/**
 	 * Removes the shift (TimeBlock) with the given id from the master schedule's
-	 * block pool. 
+	 * block pool. Side effect: saves the changed schedule to the database.
 	 */
 	public void removeShift(int slotID) {
 		if (Employee.getLoggedIn().getIsManager()) {
@@ -209,6 +210,7 @@ public class Business {
 		}
 		getMasterSchedule().removeTimeBlock(slotID);
 		getMasterSchedule().fillCompanyPool();
+		getMasterSchedule().save(this.getID());
 	}
 	
 	/**

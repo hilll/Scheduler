@@ -105,7 +105,8 @@ public class Employee implements Comparable<Employee> {
 	 */
 	public static void setCurrentSchedule(Employee emp) {
 		System.out.println("Employee.setCurrentSchedule(): setting schedule from employee " + emp.getID());
-		ArrayList<ArrayList<TimeSlot>> shiftList = emp.getBusiness().getEmployeesCurrentSchedule(emp.getID());
+		ArrayList<ArrayList<TimeSlot>> shiftList = emp.getBusiness().getEmployeesCurrentSchedule(emp);
+		//ArrayList<ArrayList<TimeSlot>> shiftList = emp.getBusiness().getEmployeesCurrentSchedule(emp.getID());
 		String schedule = "";
 		for (int i = 0; i < 7; i++) {
 			if (shiftList.get(i).size() != 0) {

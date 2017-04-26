@@ -351,14 +351,17 @@ public class Business {
 	/**
 	 * Returns the scheduled shifts of the Employee with empID.
 	 */
-	public ArrayList<ArrayList<TimeSlot>> getEmployeesCurrentSchedule(int empID) {
+	//public ArrayList<ArrayList<TimeSlot>> getEmployeesCurrentSchedule(int empID) {
+	public ArrayList<ArrayList<TimeSlot>> getEmployeesCurrentSchedule(Employee emp) {
 		ArrayList<ArrayList<TimeSlot>> sched = new ArrayList<>();
 		for (int i = 0; i < 7; i++) {
 			sched.add(new ArrayList<TimeSlot>());
 		}
 		for (TimeSlot slot : this.masterSchedule.getAllShiftsPool()) {
-			if (slot.getEmployeeID() == empID)
+			if (slot.getEmployeeID() == emp.getID()) {
+				slot.setEmployee(emp);
 				sched.get(slot.getDay()).add(slot);
+			}
 		}
 		return sched;
 	}

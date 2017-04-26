@@ -19,7 +19,57 @@
 <%= Navbar.navbar %>
 
 <br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 <div class="main">
+
+<h2>Current Availabilities</h2>
+<table style="width:100%">
+  <tr>
+  	<th>Time</th>
+    <th>Monday</th> 
+    <th>Tuesday</th>
+    <th>Wednesday</th>
+    <th>Thursday</th>
+    <th>Friday</th>
+    <th>Saturday</th>
+    <th>Sunday</th>
+  </tr>
+
+<%String[] dailyAvailability = Employee.getLoggedIn().getAvailability().getAvailabilityStrings();
+
+for(int i = 0; i < dailyAvailability[0].length(); i++){ %>
+	<%String time; 
+	int hour = i / 4 ;
+	int minutes = i % 4 * 15; 
+	String min;
+	if (minutes == 0){
+		 min = "00";
+	}else{
+		 min = minutes + "";
+	}
+	time = String.format( "%02d:%s", hour, min);%>
+	<%= "<tr><td>" + time + "</td>" %>
+	
+	
+	<%for(int j = 0; j < dailyAvailability.length; j++){
+		String available;
+		if(dailyAvailability[j].charAt(i)=='0'){
+			available = "unavailable";
+		}else{
+			available = "available";
+		} %>
+		<%= "<td class=\"" + available + "\">" %>
+		</td>
+
+	<% } %>
+	</tr>
+<% } %>
+</table>
+
 <h1>Create a New Unavailability</h1>
 
 <form method="post" action=addUnavailability id="availabilityForm">
@@ -50,38 +100,6 @@
 
 <input type="submit" value ="submit" name = "Create Shift">
 </form>
-
-
-<table style="width:100%">
-  <tr>
-  	<th>Time</th>
-    <th>Sunday</th>
-    <th>Monday</th> 
-    <th>Tuesday</th>
-    <th>Wednesday</th>
-    <th>Thursday</th>
-    <th>Friday</th>
-    <th>Saturday</th>
-  </tr>
-
-<%String[] dailyAvailability = Employee.getLoggedIn().getAvailability().getAvailabilityStrings();
-
-for(int i = 0; i < dailyAvailability[0].length(); i++){ %>
-	
-	<%= "<tr><td>" + i + "</td" %>
-	<%for(int j = 0; j < dailyAvailability.length; j++){%>
-		<c:choose>
-			<c:when test="${ dailyAvailability[j].charAt(i)=='0'}">
-				<td class = "unavailable"> <%= dailyAvailability[j].charAt(i) %> </td>
-			</c:when>
-			<c:otherwise>
-				<td class = "available"> <%= dailyAvailability[j].charAt(i) %> </td>
-			</c:otherwise>
-		</c:choose>
-	<% } %>
-	</tr>
-<% } %>
-</table>
 
 <h1> Delete Unavailability </h1>
 <form method="post" action="deleteUnavailability" id="deleteAvailabilityForm">

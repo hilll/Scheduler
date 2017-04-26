@@ -51,6 +51,38 @@
 <input type="submit" value ="submit" name = "Create Shift">
 </form>
 
+
+<table style="width:100%">
+  <tr>
+  	<th>Time</th>
+    <th>Sunday</th>
+    <th>Monday</th> 
+    <th>Tuesday</th>
+    <th>Wednesday</th>
+    <th>Thursday</th>
+    <th>Friday</th>
+    <th>Saturday</th>
+  </tr>
+
+<%String[] dailyAvailability = Employee.getLoggedIn().getAvailability().getAvailabilityStrings();
+
+for(int i = 0; i < dailyAvailability[0].length(); i++){ %>
+	
+	<%= "<tr><td>" + i + "</td" %>
+	<%for(int j = 0; j < dailyAvailability.length; j++){%>
+		<c:choose>
+			<c:when test="${ dailyAvailability[j].charAt(i)=='0'}">
+				<td class = "unavailable"> <%= dailyAvailability[j].charAt(i) %> </td>
+			</c:when>
+			<c:otherwise>
+				<td class = "available"> <%= dailyAvailability[j].charAt(i) %> </td>
+			</c:otherwise>
+		</c:choose>
+	<% } %>
+	</tr>
+<% } %>
+</table>
+
 <h1> Delete Unavailability </h1>
 <form method="post" action="deleteUnavailability" id="deleteAvailabilityForm">
 <% ArrayList<String> unavailabilities = Employee.getLoggedIn().getAvailability().getUnavailabilitySlots(); 

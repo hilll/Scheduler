@@ -62,6 +62,9 @@ table, th {
     border: 1px solid black;
     border-collapse: collapse;
 }
+td {
+	text-align:center;
+}
 
 .available{
 	background-color: green;

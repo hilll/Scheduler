@@ -57,3 +57,15 @@ body {
 <!--
 .tab { margin-left: 40px; }
 -->
+
+table, th {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.available{
+	background-color: green;
+}
+.unavailable{
+	background-color: red;
+}

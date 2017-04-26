@@ -19,8 +19,6 @@ public class DeleteShiftController  extends HttpServlet{
 			}
 			//TODO: save
 			response.sendRedirect("updateShifts.jsp");
-
-
 	}
 
 }

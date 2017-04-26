@@ -150,10 +150,21 @@ public class Business {
 					TimeSlot empChoice = emp.getAvailability().getAvailabilityPool().get(numRounds);
 					TimeSlot shift = newSchedule.getTimeBlock(empChoice);
 					if(shift.getEmployeeID() == 7){
-						System.out.println("Inside the if shift.getEmpID == 7 block");
-						shift.setEmployeeID(emp.getID());
-						shift.setEmployee(emp);
-						numBlocks--;
+						
+						//check if employee is already working that day 
+						boolean alreadyWorking = false;
+						for(TimeSlot allShifts : getMasterSchedule().getAllShiftsPool()){
+							if(allShifts.getDay() == shift.getDay() && allShifts.getEmployee() ==emp){
+								alreadyWorking = true;
+							}
+						}
+						if(!alreadyWorking){
+							System.out.println("Inside the if shift.getEmpID == 7 block");
+							shift.setEmployeeID(emp.getID());
+							shift.setEmployee(emp);
+							numBlocks--;
+						}
+						
 					}
 				}
 			}

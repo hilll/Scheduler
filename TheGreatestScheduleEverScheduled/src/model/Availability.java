@@ -113,7 +113,7 @@ public class Availability {
 		for (int c = 0; c < daysAvailability.length(); c++) {
 			int curr = Character.getNumericValue(daysAvailability.charAt(c));
 			if (curr == -1) {
-				System.out.println("There is an error in the database string representing employee availability.\n");
+				System.err.println("There is an error in the database string representing employee availability.\n");
 				System.exit(-1);
 			}
 			if (streakType != curr) { // either start of string, or switching
@@ -176,7 +176,7 @@ public class Availability {
 			if (s.isEqualByDayAndTimes(slot))
 				return;
 		}
-		System.out.printf("addUnavailability(): %s\n", slot.toString());
+		//System.out.printf("addUnavailability(): %s\n", slot.toString());
 		unavailabilityList.add(slot);
 		availabilityHash.put(slot.toString(), slot);
 	}
@@ -225,7 +225,7 @@ public class Availability {
 	 * unavailabilityList, false if it wasn't found.
 	 */
 	public boolean removeUnavailability(TimeSlot ts) {
-		System.out.println("removeUnavailability() called");
+		//System.out.println("removeUnavailability() called");
 		if (availabilityHash.get(ts.toString()) != null) {
 				unavailabilityList.remove(ts);
 				availabilityHash.remove(ts.toString());

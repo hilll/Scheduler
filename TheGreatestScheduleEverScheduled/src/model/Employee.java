@@ -56,13 +56,13 @@ public class Employee implements Comparable<Employee> {
 	 */
 	public static Employee loadFromID(int id, Business business) {
 		Database.beginPersistentConnection();
-		System.out.println("Employee.loadFromID(): loading from id " + id);
+		//System.out.println("Employee.loadFromID(): loading from id " + id);
 		String query = "SELECT * FROM " + getTableName() + " WHERE id=" + id;
 		ArrayList<HashMap<String, String>> result = Database.executeSelectQuery(query);
 		if (result.size() == 0)
 			return null;
 		HashMap<String, String> hm = result.get(0);
-		System.out.println("Employee.loadFromID(): loading availability");
+		//System.out.println("Employee.loadFromID(): loading availability");
 		String[] avail = Availability.loadAvailabilityFromID(id);
 		boolean isManager;
 		if (hm.get("is_manager").equals("1"))
@@ -70,7 +70,7 @@ public class Employee implements Comparable<Employee> {
 		else
 			isManager = false;
 		Employee loaded = new Employee(id, hm.get("fname"), hm.get("lname"), hm.get("email"), avail, isManager);
-		System.out.println("Employee.loadFromID(): loading business");
+		//System.out.println("Employee.loadFromID(): loading business");
 		if (business == null) {
 			Business bus = Business.loadFromID(Integer.parseInt(hm.get("business_id")));
 			bus.addEmployee(loaded);
@@ -104,7 +104,7 @@ public class Employee implements Comparable<Employee> {
 	 * master schedule. 
 	 */
 	public static void setCurrentSchedule(Employee emp) {
-		System.out.println("Employee.setCurrentSchedule(): setting schedule from employee " + emp.getID());
+		//System.out.println("Employee.setCurrentSchedule(): setting schedule from employee " + emp.getID());
 		ArrayList<ArrayList<TimeSlot>> shiftList = emp.getBusiness().getEmployeesCurrentSchedule(emp);
 		//ArrayList<ArrayList<TimeSlot>> shiftList = emp.getBusiness().getEmployeesCurrentSchedule(emp.getID());
 		String schedule = "";

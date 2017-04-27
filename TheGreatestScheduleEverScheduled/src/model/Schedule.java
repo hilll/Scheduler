@@ -81,9 +81,11 @@ public class Schedule {
 	 * Adds slot to the appropriate day of the shiftsByDay list.
 	 * Use this to add an existing shift to the Schedule when you're 
 	 * loading from the database.
+	 * 
+	 * This should not be called to add a new shift to the schedule
 	 */
 	public void addShift(TimeSlot slot) {
-		System.out.println("This should not be called to add a new shift to the schedule.");
+		//System.out.println("This should not be called to add a new shift to the schedule.");
 		shiftsByDay.get(slot.getDay()).add(slot);
 		allShiftsPool.add(slot);
 	}

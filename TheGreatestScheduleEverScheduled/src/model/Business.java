@@ -44,7 +44,7 @@ public class Business {
 		if (id == -1) {
 			id = Database.getNextIDForTable(getTableName()); 
 			if (id < 0) { 
-				System.out.println("an error occurred while getting next ID return false");
+				System.err.println("an error occurred while getting next ID return false");
 			}
 		}
 		this.id = id;
@@ -95,7 +95,7 @@ public class Business {
 		String query = "SELECT * FROM " + Schedule.getTableName() + " WHERE business_id=" + bus.getID();
 		ArrayList<HashMap<String, String>> result = Database.executeSelectQuery(query);
 		if (result.size() == 0) {
-			System.out.println("Result was 0.");
+			//System.out.println("Result was 0.");
 			return;
 		}
 		HashMap<String, String> hm;
@@ -128,9 +128,9 @@ public class Business {
 	 */
 	public Schedule generateNewSchedule() {
 		if (Employee.getLoggedIn().getIsManager()) {
-			System.out.println(Employee.getLoggedIn().getFullName() + " is a manager, so they can generate a new schedule.");
+			// System.out.println(Employee.getLoggedIn().getFullName() + " is a manager, so they can generate a new schedule.");
 		} else {
-			System.out.println(Employee.getLoggedIn().getFullName() + " is not a manager, so they can't generate a new schedule.");
+			// System.out.println(Employee.getLoggedIn().getFullName() + " is not a manager, so they can't generate a new schedule.");
 			return null;
 		}
 		
@@ -159,7 +159,7 @@ public class Business {
 							}
 						}
 						if(!alreadyWorking){
-							System.out.println("Inside the if shift.getEmpID == 7 block");
+							// System.out.println("Inside the if shift.getEmpID == 7 block");
 							shift.setEmployeeID(emp.getID());
 							shift.setEmployee(emp);
 							numBlocks--;

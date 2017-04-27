@@ -11,7 +11,14 @@
 <title>Generate Schedule</title>
 </head>
 <body>
-<%= Navbar.navbar %>
+<%String navbar;
+if(Employee.getLoggedIn().getIsManager()){ 
+	navbar = Navbar.navbar + Navbar.managerNavbar + "</div>";
+}else{
+	navbar = Navbar.navbar + "</div>";
+}%>
+
+<%= navbar %>
 <br/>
 <div class="center">
 	

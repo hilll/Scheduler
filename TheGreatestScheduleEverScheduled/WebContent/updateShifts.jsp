@@ -15,10 +15,71 @@
 
 </head>
 <body>
-<%= Navbar.navbar %>
+<%String navbar;
+if(Employee.getLoggedIn().getIsManager()){ 
+	navbar = Navbar.navbar + Navbar.managerNavbar + "</div>";
+}else{
+	navbar = Navbar.navbar + "</div>";
+}%>
+
+<%= navbar %>
 
 <br/>
+<br/>
+<br/>
+<br/>
 <div class="main">
+<h1> Current Shifts</h1>
+<%ArrayList<ArrayList<String>> dailyShifts = Employee.getLoggedIn().getBusiness().getMasterSchedule().getShiftsAsBinaryStrings();%>
+<table style="width:100%">
+  <tr>
+  	<th>Time</th>
+  	<th colspan ="<%= dailyShifts.get(0).size() %>">Sunday </th>
+    <th colspan= "<%= dailyShifts.get(1).size() %>">Monday</th> 
+    <th colspan= "<%= dailyShifts.get(2).size() %>">Tuesday</th>
+    <th colspan= "<%= dailyShifts.get(3).size() %>">Wednesday</th>
+    <th colspan= "<%= dailyShifts.get(4).size() %>">Thursday</th>
+    <th colspan= "<%= dailyShifts.get(5).size() %>">Friday</th>
+    <th colspan= "<%= dailyShifts.get(6).size() %>">Saturday</th>
+    
+  </tr>
+
+
+<% for(int i = 0; i < 96; i++){ 
+	String time; 
+	int hour = i / 4 ;
+	int minutes = i % 4 * 15; 
+	String min;
+	if (minutes == 0){
+		 min = "00";
+	}else{
+		 min = minutes + "";
+	}
+	time = String.format( "%02d:%s", hour, min);%>
+	<%= "<tr><td>" + time + "</td>" %>
+	
+	
+	<%for(int j = 0; j < 7; j++){
+		for(int k = 0; k < dailyShifts.get(j).size(); k++){
+			String shift;
+			if(dailyShifts.get(j).get(k).charAt(i)=='1'){
+				shift = "shift";
+			}else{
+				shift = "noshift";
+			}
+		
+	
+	%>
+		<%= "<td class=\"" + shift + "\">" %>
+		</td>
+
+	<% } %>
+	
+<% }%>
+</tr>
+<% }%>
+</table>
+
 <h1>Create a New Shift</h1>
 
 <form method="post" action="addShift" id="shiftForm">

@@ -24,11 +24,14 @@ if(Employee.getLoggedIn().getIsManager()){
 	
 	
 	<form method="post" action="generateSchedule" id="generateScheduleForm">
-		<label>Generate a New Schedule</label>
-		<input type="submit" value ="submit" name="Generate New Schedule">
+	<pre>
+<label>Generate a New Schedule</label>
+<input type="submit" value ="submit" name="Generate New Schedule">
+	</pre>
 	</form>
-	<%= Employee.getLoggedIn().getBusiness().getMasterSchedule().toString() %>
-
+	<pre>
+<%= Employee.getLoggedIn().getBusiness().getMasterSchedule().toString() %>
+	</pre>
 </div>
 </body>
 </html>

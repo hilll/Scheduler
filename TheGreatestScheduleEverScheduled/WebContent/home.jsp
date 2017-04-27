@@ -27,8 +27,9 @@ if(Employee.getLoggedIn().getIsManager()){
 
 	
 	<h1>Current Shifts: </h1>
-	<%= Employee.getLoggedIn().getSchedule() %>
-	
+	<pre>
+<%= Employee.getLoggedIn().getSchedule() %>
+	</pre>
 
 </div>
 

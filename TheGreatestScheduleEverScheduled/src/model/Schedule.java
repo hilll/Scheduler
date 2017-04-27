@@ -335,19 +335,20 @@ public class Schedule {
 	}
 	
 	/**
-	 * Returns an array list of array lists of all of the shifts as binary strings.
+	 * Returns an array array lists of all of the shifts as binary strings.
 	 * arraylist 0 = Sunday, etc. Times included in the shift are represented by 0s.
 	 */
-	public ArrayList<ArrayList<String>> getShiftsAsBinaryStrings() {
-		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+	public ArrayList<String>[] getShiftsAsBinaryStrings() {
+		ArrayList<String>[] result = new ArrayList[7];
 		for (int i = 0; i < 7; i++) {
-			result.add(new ArrayList<String>());
+			result[i] = new ArrayList<String>();
 		}
 		for (int j = 0; j < 7; j++) {
 			for (TimeSlot ts : shiftsByDay.get(j)) {
-				result.get(j).add(ts.getTimeAsString());
+				result[j].add(ts.getTimeAsString());
 			}
 		}
 		return result;
+		
 	}
 }

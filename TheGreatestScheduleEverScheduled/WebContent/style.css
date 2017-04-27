@@ -58,7 +58,7 @@ body {
 .tab { margin-left: 40px; }
 -->
 
-table, th {
+table, th, td {
     border: 1px solid black;
     border-collapse: collapse;
 }
@@ -71,4 +71,10 @@ td {
 }
 .unavailable{
 	background-color: red;
+}
+.shift{
+	background-color: blue;
+}
+.noshift{
+	background-color: grey;
 }

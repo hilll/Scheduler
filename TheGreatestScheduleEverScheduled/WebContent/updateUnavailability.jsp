@@ -16,7 +16,14 @@
 
 </head>
 <body>
-<%= Navbar.navbar %>
+<%String navbar;
+if(Employee.getLoggedIn().getIsManager()){ 
+	navbar = Navbar.navbar + Navbar.managerNavbar + "</div>";
+}else{
+	navbar = Navbar.navbar + "</div>";
+}%>
+
+<%= navbar %>
 
 <br/>
 <br/>
@@ -30,13 +37,14 @@
 <table style="width:100%">
   <tr>
   	<th>Time</th>
-    <th>Monday</th> 
+    <th>Sunday</th>
     <th>Tuesday</th>
     <th>Wednesday</th>
     <th>Thursday</th>
     <th>Friday</th>
     <th>Saturday</th>
-    <th>Sunday</th>
+    
+    <th>Monday</th>
   </tr>
 
 <%String[] dailyAvailability = Employee.getLoggedIn().getAvailability().getAvailabilityStrings();

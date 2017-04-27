@@ -38,13 +38,14 @@ if(Employee.getLoggedIn().getIsManager()){
   <tr>
   	<th>Time</th>
     <th>Sunday</th>
+    <th>Monday</th>
     <th>Tuesday</th>
     <th>Wednesday</th>
     <th>Thursday</th>
     <th>Friday</th>
     <th>Saturday</th>
     
-    <th>Monday</th>
+   
   </tr>
 
 <%String[] dailyAvailability = Employee.getLoggedIn().getAvailability().getAvailabilityStrings();

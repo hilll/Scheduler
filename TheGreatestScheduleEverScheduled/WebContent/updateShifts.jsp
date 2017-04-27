@@ -30,17 +30,17 @@ if(Employee.getLoggedIn().getIsManager()){
 <br/>
 <div class="main">
 <h1> Current Shifts</h1>
-<%ArrayList<ArrayList<String>> dailyShifts = Employee.getLoggedIn().getBusiness().getMasterSchedule().getShiftsAsBinaryStrings();%>
+<%ArrayList<String>[] dailyShifts = Employee.getLoggedIn().getBusiness().getMasterSchedule().getShiftsAsBinaryStrings();%>
 <table style="width:100%">
   <tr>
   	<th>Time</th>
-  	<th colspan ="<%= dailyShifts.get(0).size() %>">Sunday </th>
-    <th colspan= "<%= dailyShifts.get(1).size() %>">Monday</th> 
-    <th colspan= "<%= dailyShifts.get(2).size() %>">Tuesday</th>
-    <th colspan= "<%= dailyShifts.get(3).size() %>">Wednesday</th>
-    <th colspan= "<%= dailyShifts.get(4).size() %>">Thursday</th>
-    <th colspan= "<%= dailyShifts.get(5).size() %>">Friday</th>
-    <th colspan= "<%= dailyShifts.get(6).size() %>">Saturday</th>
+  	<th colspan ="<%= dailyShifts[0].size() %>">Sunday </th>
+    <th colspan= "<%= dailyShifts[1].size() %>">Monday</th> 
+    <th colspan= "<%= dailyShifts[2].size() %>">Tuesday</th>
+    <th colspan= "<%= dailyShifts[3].size() %>">Wednesday</th>
+    <th colspan= "<%= dailyShifts[4].size() %>">Thursday</th>
+    <th colspan= "<%= dailyShifts[5].size() %>">Friday</th>
+    <th colspan= "<%= dailyShifts[6].size() %>">Saturday</th>
     
   </tr>
 
@@ -60,9 +60,15 @@ if(Employee.getLoggedIn().getIsManager()){
 	
 	
 	<%for(int j = 0; j < 7; j++){
-		for(int k = 0; k < dailyShifts.get(j).size(); k++){
+		if(dailyShifts[j].size()==0){
+			String shift = "noshift"; %>
+			<%= "<td class=\"" + shift + "\">" %>
+			</td>
+		<% continue;
+		}
+		for(int k = 0; k < dailyShifts[j].size(); k++){
 			String shift;
-			if(dailyShifts.get(j).get(k).charAt(i)=='1'){
+			if(dailyShifts[j].get(k).charAt(i)=='1'){
 				shift = "shift";
 			}else{
 				shift = "noshift";

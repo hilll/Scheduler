@@ -16,6 +16,7 @@ public class Employee implements Comparable<Employee> {
 	// the business this Employee belongs to
 	private Business bus;
 	private String currentSchedule;
+	private ArrayList<ArrayList<TimeSlot>> empShiftList;
 
 	public static String getTableName() {
 		return "employee";
@@ -117,14 +118,33 @@ public class Employee implements Comparable<Employee> {
 			}
 		}
 		schedule.trim();
-		emp.setSched(schedule);
+		emp.setSched(shiftList, schedule);
 	}
 	
 	/**
 	 * Sets this Employee's schedule to sched.
 	 */
-	public void setSched(String sched) {
+	public void setSched(ArrayList<ArrayList<TimeSlot>> shiftList, String sched) {
+		this.empShiftList = shiftList;
 		this.currentSchedule = sched;
+	}
+	
+	/**
+	 * Returns an array array lists of all of the shifts as binary strings.
+	 * arraylist 0 = Sunday, etc. Times included in the shift are represented by 0s.
+	 */
+	public ArrayList<String>[] getScheduledShiftsAsBinaryStrings() {
+		ArrayList<String>[] result = new ArrayList[7];
+		for (int i = 0; i < 7; i++) {
+			result[i] = new ArrayList<String>();
+		}
+		for (int j = 0; j < 7; j++) {
+			for (TimeSlot ts : empShiftList.get(j)) {
+				result[j].add(ts.getTimeAsString());
+			}
+		}
+		return result;
+		
 	}
 	
 	/**

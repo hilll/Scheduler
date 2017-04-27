@@ -20,7 +20,11 @@ if(Employee.getLoggedIn().getIsManager()){
 
 <%= navbar %>
 <br/>
-<div class="center">
+<br/>
+<br/>
+<br/>
+<br/>
+<div>
 	
 	
 	<form method="post" action="generateSchedule" id="generateScheduleForm">
